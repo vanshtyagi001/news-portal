@@ -1,0 +1,27 @@
+# Turn on the rewrite engine
+RewriteEngine On
+
+# Set the base directory for all rules
+RewriteBase /raj-news/
+
+# Prevent the rules from applying to actual files or directories that exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# RULE 1: Handle SHORT Article URLs (e.g., /article/41315)
+# This rule takes the ID, finds the corresponding slug, and permanently redirects to the "pretty" URL.
+# This is great for SEO as it consolidates all links to one format.
+RewriteRule ^article/(\d+)/?$ article-redirect.php?id=$1 [L,QSA]
+
+# RULE 2: Handle "Pretty" News Article URLs (e.g., /news/my-post-slug)
+# This is the main rule that internally rewrites the URL to the actual PHP file.
+RewriteRule ^news/([a-zA-Z0-9-]+)/?$ news.php?slug=$1 [L,QSA]
+
+# RULE 3: Handle Category Archives (e.g., /category/technology)
+RewriteRule ^category/([a-zA-Z0-9-]+)/?$ category.php?slug=$1 [L,QSA]
+
+# RULE 4: Handle Tag Archives (e.g., /tag/ai)
+RewriteRule ^tag/([a-zA-Z0-9-]+)/?$ tag.php?slug=$1 [L,QSA]
+
+# --- Static File Rules (No Rewrite Needed) ---
+RewriteRule ^sitemap\.xml$ sitemap.php [L]

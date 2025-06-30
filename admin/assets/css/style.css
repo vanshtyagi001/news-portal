@@ -1,0 +1,405 @@
+/*
+======================================
+Raj News - Professional Admin Theme
+======================================
+*/
+
+/* --- Global Styles & Variables --- */
+:root {
+    --primary-color: #4a69bd;
+    --primary-color-dark: #1e3799;
+    --secondary-color: #60a3bc;
+    --light-gray: #f8f9fa;
+    --medium-gray: #e9ecef;
+    --dark-gray: #6c757d;
+    --text-color: #343a40;
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #ecf0f1;
+    --sidebar-hover: #34495e;
+    --sidebar-active: var(--primary-color);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--light-gray);
+    margin: 0;
+    color: var(--text-color);
+    font-size: 16px;
+}
+* { box-sizing: border-box; }
+a { text-decoration: none; color: var(--primary-color); }
+a:hover { color: var(--primary-color-dark); }
+p { line-height: 1.6; }
+
+
+/* --- Authentication Pages (Login/Signup) --- */
+body.auth-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+/* ... Other auth styles are fine as they are ... */
+
+
+/* --- Main Admin Wrapper & Sidebar --- */
+.admin-wrapper {
+    display: flex;
+    position: relative;
+}
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+}
+.sidebar-header {
+    padding: 1.25rem 1rem;
+    text-align: center;
+    background: var(--sidebar-hover);
+    border-bottom: 1px solid #4a627a;
+}
+.sidebar-header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+.sidebar-header .logo span {
+    color: var(--secondary-color);
+}
+.admin-info {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #4a627a;
+}
+.admin-info p { margin: 0; line-height: 1.4; }
+.admin-info strong { font-size: 1.1em; }
+.admin-info small { color: #bdc3c7; text-transform: capitalize; }
+.sidebar-nav { list-style: none; padding: 1rem 0; margin: 0; }
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--sidebar-text);
+    transition: background 0.2s, color 0.2s;
+    margin: 5px 10px;
+    border-radius: 6px;
+}
+.sidebar-nav li a .icon {
+    margin-right: 15px;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+.sidebar-nav li a:hover {
+    background: var(--sidebar-hover);
+    color: #fff;
+}
+.sidebar-nav li a.active {
+    background: var(--sidebar-active);
+    color: #fff;
+    font-weight: 500;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    flex-grow: 1;
+    margin-left: 260px; /* Same as sidebar width */
+    padding: 2rem;
+    transition: margin-left 0.3s ease-in-out;
+}
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--medium-gray);
+}
+.content-header h2 { margin: 0; font-weight: 300; font-size: 2rem; }
+.main-content .card {
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+.main-content .card-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--medium-gray);
+    padding: 1.25rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+.main-content .card-body {
+    padding: 1.5rem;
+}
+
+/* --- Mobile Nav Toggler --- */
+.mobile-nav-toggler {
+    display: none; /* Hidden on desktop */
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1001;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+body.sidebar-toggled .sidebar {
+    transform: translateX(0);
+}
+
+
+/* --- Component Styles: Buttons, Forms, Tables --- */
+.btn {
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-primary { background-color: var(--primary-color); color: #fff; }
+.btn-primary:hover { background-color: var(--primary-color-dark); }
+.btn-edit { background: #ffc107; color: #212529; padding: 5px 10px; }
+.btn-delete { background: #dc3545; color: #fff; padding: 5px 10px; }
+.btn .icon { margin-right: 8px; }
+/* ... after the existing .btn-delete style ... */
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+}
+.btn-icon .icon {
+    margin-right: 8px;
+}
+
+/* New icon button styles for tables */
+.action-btn {
+    border-radius: 6px;
+    padding: 8px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 2px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.action-btn.edit {
+    background-color: #ffc107;
+    color: #212529;
+}
+.action-btn.delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+.action-btn.approve {
+    background-color: #28a745;
+    color: #fff;
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.2);
+    outline: none;
+}
+
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 1rem; border-bottom: 1px solid var(--medium-gray); text-align: left; vertical-align: middle; }
+th { font-weight: 600; background-color: var(--light-gray); }
+tbody tr:hover { background-color: #f1f3f5; }
+
+
+/* --- Dashboard-Specific Styles --- */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+.stat-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+}
+.stat-card .icon {
+    font-size: 2.5rem;
+    padding: 1rem;
+    border-radius: 50%;
+    margin-right: 1.5rem;
+    color: #fff;
+}
+.stat-card .info h4 { margin: 0; font-size: 1rem; color: var(--dark-gray); }
+.stat-card .info p { margin: 0; font-size: 2rem; font-weight: 600; color: var(--text-color); }
+
+
+/*
+======================================
+MOBILE RESPONSIVENESS
+======================================
+*/
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-260px); /* Hide sidebar off-screen by default */
+    }
+    .main-content {
+        margin-left: 0; /* Full width content area */
+    }
+    .mobile-nav-toggler {
+        display: block; /* Show the hamburger button */
+    }
+}
+@media (max-width: 576px) {
+    .main-content {
+        padding: 1rem;
+    }
+    .content-header h2 {
+        font-size: 1.5rem;
+    }
+    .content-header .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+/*
+======================================
+V5 - Mobile-First & Dashboard Enhancements
+======================================
+*/
+
+/* --- New Dashboard Styles --- */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+.action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: var(--light-gray);
+    border: 1px solid var(--medium-gray);
+    border-radius: 8px;
+    text-align: center;
+    color: var(--text-color);
+    transition: all 0.2s ease-in-out;
+}
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 7px 20px rgba(0,0,0,0.08);
+    background-color: #fff;
+    color: var(--primary-color);
+}
+.action-card .icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+.action-card span {
+    font-weight: 500;
+}
+
+/*
+--- NEW Mobile Card List View ---
+This is the core of the mobile redesign for manage pages.
+*/
+
+/* Hide the mobile card view on larger screens */
+.mobile-card-list {
+    display: none;
+}
+
+/* On mobile screens, hide the table and show the card list */
+@media (max-width: 768px) {
+    .table-wrapper {
+        display: none; /* Hide the desktop table */
+    }
+    .mobile-card-list {
+        display: block; /* Show the mobile card list */
+    }
+
+    .mobile-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+    .mobile-card .card-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        word-break: break-word; /* Prevent long titles from overflowing */
+    }
+    .mobile-card .card-meta {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    .mobile-card .card-meta span {
+        margin-right: 1rem;
+    }
+    .mobile-card .card-meta .icon {
+        margin-right: 5px;
+    }
+    .mobile-card .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        border-top: 1px solid var(--medium-gray);
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+    /* Use full-width buttons on mobile for easier tapping */
+    .mobile-card .card-actions .btn {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

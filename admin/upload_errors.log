@@ -1,0 +1,10 @@
+[27-Jun-2025 11:00:01 Europe/Berlin] --- NEW UPLOAD REQUEST AT 2025-06-27 11:00:01 ---
+[27-Jun-2025 11:00:01 Europe/Berlin] File received: Picsart_23-02-14_01-54-51-003.png | Type: image/png | Size: 1474338
+[27-Jun-2025 11:00:01 Europe/Berlin] File is an image. Attempting optimization.
+[27-Jun-2025 11:00:02 Europe/Berlin] Optimization successful. Base name: 1751014801_Picsart_23-02-14_01-54-51-003
+[27-Jun-2025 11:00:02 Europe/Berlin] File saved. Inserting into database.
+[27-Jun-2025 11:00:02 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'title' in 'field list' in C:\xampp\htdocs\raj-news\admin\media-upload-handler.php:87
+Stack trace:
+#0 C:\xampp\htdocs\raj-news\admin\media-upload-handler.php(87): mysqli_prepare(Object(mysqli), 'INSERT INTO med...')
+#1 {main}
+  thrown in C:\xampp\htdocs\raj-news\admin\media-upload-handler.php on line 87
