@@ -17,10 +17,27 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Detect Composer project
+      id: detect-composer
+      run: |
+        if [ -f composer.json ]; then
+          echo "exists=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "exists=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer
+
     - name: Validate composer.json and composer.lock
+      if: steps.detect-composer.outputs.exists == 'true'
       run: composer validate --strict
 
     - name: Cache Composer packages
+      if: steps.detect-composer.outputs.exists == 'true'
       id: composer-cache
       uses: actions/cache@v3
       with:
@@ -30,7 +47,13 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
+      if: steps.detect-composer.outputs.exists == 'true'
       run: composer install --prefer-dist --no-progress
+
+    - name: Lint PHP files (non-Composer project)
+      if: steps.detect-composer.outputs.exists == 'false'
+      run: |
+        find . -name "*.php" -print0 | xargs -0 -n1 php -l
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
