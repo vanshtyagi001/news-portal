@@ -1,4 +1,4 @@
-# Raj News Portal
+# Express News Portal
 
 A full-stack PHP news publishing platform with a public news site, user accounts, and a role-based admin panel.
 
@@ -71,7 +71,7 @@ Defined in `.htaccess` (Apache `mod_rewrite`):
 
 ## Important Runtime Assumptions
 
-- Base path is hardcoded in many places as `/raj-news/`.
+- Base path is hardcoded in many places as `/express-news/`.
 - Database credentials are hardcoded in `admin/includes/db.php`.
 - Apache rewrite rules are required for pretty URLs.
 - `uploads/` and `assets/images/` must be writable by the web server.
@@ -90,11 +90,11 @@ Defined in `.htaccess` (Apache `mod_rewrite`):
 ## Installation (Local)
 
 1. Copy project to your web root.
-2. Keep the folder name aligned with rewrite/base-path usage (`raj-news`) or update all hardcoded `/raj-news/` paths.
+2. Keep the folder name aligned with rewrite/base-path usage (`express-news`) or update all hardcoded `/express-news/` paths.
 3. Create database:
 
 ```sql
-CREATE DATABASE raj_news_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE express_news_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 4. Configure DB credentials in `admin/includes/db.php`:
@@ -103,7 +103,7 @@ CREATE DATABASE raj_news_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'raj_news_db');
+define('DB_NAME', 'express_news_db');
 ```
 
 5. Create required folders and permissions:
@@ -115,8 +115,8 @@ define('DB_NAME', 'raj_news_db');
 - `assets/images/placeholder.webp`
 
 7. Start Apache/MySQL and open:
-- Public site: `http://localhost/raj-news/`
-- Admin login: `http://localhost/raj-news/admin/`
+- Public site: `http://localhost/express-news/`
+- Admin login: `http://localhost/express-news/admin/`
 
 ## Database Schema (Inferred)
 

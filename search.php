@@ -1,6 +1,6 @@
 <?php
 /**
- * Raj News - Search Results Page (v11.2 - Pathing Fix)
+ * Express News - Search Results Page (v11.2 - Pathing Fix)
  * This page displays a paginated list of posts matching a search query.
  */
 
@@ -18,7 +18,7 @@ $query = isset($_GET['query']) ? trim($_GET['query']) : '';
 $page_title = 'Search Results for "' . htmlspecialchars($query) . '"';
 
 // Dynamically update the page title using JavaScript because the header is already loaded.
-echo "<script>document.title = '" . addslashes($page_title) . " - Raj News';</script>";
+echo "<script>document.title = '" . addslashes($page_title) . " - Express News';</script>";
 ?>
 
 <div class="row">
@@ -81,7 +81,7 @@ echo "<script>document.title = '" . addslashes($page_title) . " - Raj News';</sc
                     ?>
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100 shadow-sm news-card">
-                            <a href="/raj-news/news/<?php echo $post['slug']; ?>">
+                            <a href="/express-news/news/<?php echo $post['slug']; ?>">
                                 <picture>
                                     <source srcset="<?php echo $image_paths['webp']; ?>" type="image/webp">
                                     <source srcset="<?php echo $image_paths['jpg']; ?>" type="image/jpeg">
@@ -92,9 +92,9 @@ echo "<script>document.title = '" . addslashes($page_title) . " - Raj News';</sc
                                 <?php if(!empty($post['category_names'])): ?>
                                     <p class="card-text text-muted small mb-1"><?php echo htmlspecialchars($post['category_names']); ?></p>
                                 <?php endif; ?>
-                                <h5 class="card-title"><a href="/raj-news/news/<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h5>
+                                <h5 class="card-title"><a href="/express-news/news/<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h5>
                                 <p class="card-text flex-grow-1"><?php echo htmlspecialchars($post['summary']); ?></p>
-                                <a href="/raj-news/news/<?php echo $post['slug']; ?>" class="btn btn-primary align-self-start mt-auto">Read More</a>
+                                <a href="/express-news/news/<?php echo $post['slug']; ?>" class="btn btn-primary align-self-start mt-auto">Read More</a>
                             </div>
                         </div>
                     </div>

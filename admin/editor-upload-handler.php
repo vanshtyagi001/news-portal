@@ -40,7 +40,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
 
     if ($optimized_basename) {
         // Success! Send back the public URL of the JPG version.
-        $public_url = '/raj-news/uploads/' . $optimized_basename . '.jpg';
+        $public_url = '/express-news/uploads/' . $optimized_basename . '.jpg';
         echo json_encode(['status' => 'success', 'url' => $public_url]);
     } else {
         http_response_code(500);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Raj News - Database Connection & Core Functions
+ * Express News - Database Connection & Core Functions
  * This file is the single source of truth for database connections and helper functions.
  * It's included by other files to gain access to the database and utilities.
  */
@@ -15,7 +15,7 @@
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'raj_news_db');
+define('DB_NAME', 'express_news_db');
 
 // --- Establish Database Connection ---
 // This creates the $conn variable that all other scripts will use to interact with the database.
@@ -134,8 +134,8 @@ function optimize_image($source_path, $destination_path_no_ext, $max_width = 120
 function getImagePaths($db_image_value) {
     // Define a default/placeholder image in case the provided value is empty.
     // IMPORTANT: You should create a simple placeholder image and save it here.
-    $default_image_path = '/raj-news/assets/images/placeholder.jpg';
-    $default_image_path_webp = '/raj-news/assets/images/placeholder.webp';
+    $default_image_path = '/express-news/assets/images/placeholder.jpg';
+    $default_image_path_webp = '/express-news/assets/images/placeholder.webp';
 
     if (empty($db_image_value)) {
         return ['webp' => $default_image_path_webp, 'jpg' => $default_image_path];
@@ -152,8 +152,8 @@ function getImagePaths($db_image_value) {
     
     // Construct the final, root-relative paths that will work in HTML.
     $paths = [
-        'webp' => '/raj-news/uploads/' . htmlspecialchars($image_base) . '.webp',
-        'jpg'  => '/raj-news/uploads/' . htmlspecialchars($image_base) . '.jpg'
+        'webp' => '/express-news/uploads/' . htmlspecialchars($image_base) . '.webp',
+        'jpg'  => '/express-news/uploads/' . htmlspecialchars($image_base) . '.jpg'
     ];
     
     return $paths;

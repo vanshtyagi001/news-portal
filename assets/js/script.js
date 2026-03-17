@@ -1,5 +1,5 @@
 /**
- * Raj News - Main Frontend JavaScript File (v11.1 - Robustness Fix)
+ * Express News - Main Frontend JavaScript File (v11.1 - Robustness Fix)
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 formData.append('action', actionName);
                 formData.append('post_id', postId);
 
-                fetch('/raj-news/ajax-handler.php', {
+                fetch('/express-news/ajax-handler.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('category_id', categoryId);
             formData.append('offset', offset);
 
-            fetch('/raj-news/ajax-load-more.php', { method: 'POST', body: formData })
+            fetch('/express-news/ajax-load-more.php', { method: 'POST', body: formData })
                 .then(response => response.text())
                 .then(data => {
                     if (data.trim() === 'no-more') {

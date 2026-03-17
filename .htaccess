@@ -2,7 +2,7 @@
 RewriteEngine On
 
 # Set the base directory for all rules
-RewriteBase /raj-news/
+RewriteBase /express-news/
 
 # Prevent the rules from applying to actual files or directories that exist
 RewriteCond %{REQUEST_FILENAME} !-f

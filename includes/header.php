@@ -1,6 +1,6 @@
 <?php
 /**
- * Raj News - Main Frontend Header (v13.5.1 - Tagline Fix)
+ * Express News - Main Frontend Header (v13.5.1 - Tagline Fix)
  * This file includes all core dependencies and renders the final, professional
  * single-bar navigation header, with a unified structure for all devices.
  */
@@ -30,7 +30,7 @@ if (isset($conn)) {
 }
 
 // Set default values in case settings are missing from the database
-$site_name = $site_settings['site_name'] ?? 'Raj News';
+$site_name = $site_settings['site_name'] ?? 'Express News';
 $site_tagline = $site_settings['site_tagline'] ?? 'Your Daily News Source';
 $site_logo = $site_settings['site_logo'] ?? 'assets/images/logo.png';
 $site_favicon = $site_settings['site_favicon'] ?? 'assets/images/favicon.ico';
@@ -44,10 +44,10 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $final_page_title; ?></title>
-    <meta name="description" content="<?php echo isset($page_description) ? htmlspecialchars($page_description) : 'The latest updates on politics, technology, sports, and more from around the world, brought to you by Raj News.'; ?>">
+    <meta name="description" content="<?php echo isset($page_description) ? htmlspecialchars($page_description) : 'The latest updates on politics, technology, sports, and more from around the world, brought to you by Express News.'; ?>">
     
     <!-- Dynamic Favicon -->
-    <link rel="icon" href="/raj-news/<?php echo htmlspecialchars($site_favicon); ?>" type="image/x-icon">
+    <link rel="icon" href="/express-news/<?php echo htmlspecialchars($site_favicon); ?>" type="image/x-icon">
     
     <!-- Professional SEO & Social Tags -->
     <?php if (isset($canonical_url)): ?>
@@ -76,7 +76,7 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="stylesheet" href="/raj-news/assets/css/style.css">
+    <link rel="stylesheet" href="/express-news/assets/css/style.css">
 </head>
 <body>
     <header class="main-header" id="main-header">
@@ -85,9 +85,9 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
                 
                 <!-- 1. Site Branding (Logo and Tagline) - CORRECTED -->
                 <div class="site-branding">
-                    <a class="navbar-brand" href="/raj-news/">
+                    <a class="navbar-brand" href="/express-news/">
                         <?php if(!empty($site_logo) && file_exists(__DIR__ . '/../' . $site_logo)): ?>
-                            <img src="/raj-news/<?php echo htmlspecialchars($site_logo); ?>" alt="<?php echo htmlspecialchars($site_name); ?> Logo">
+                            <img src="/express-news/<?php echo htmlspecialchars($site_logo); ?>" alt="<?php echo htmlspecialchars($site_name); ?> Logo">
                         <?php else: ?>
                             <span class="h4 mb-0"><?php echo htmlspecialchars($site_name); ?></span>
                         <?php endif; ?>
@@ -115,16 +115,16 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
                         $visible_categories = array_slice($all_categories, 0, $visible_limit);
                         $more_categories = array_slice($all_categories, $visible_limit);
                         
-                        echo "<li class='nav-item'><a class='nav-link' href='/raj-news/'>Home</a></li>";
+                        echo "<li class='nav-item'><a class='nav-link' href='/express-news/'>Home</a></li>";
                         foreach ($visible_categories as $category) {
-                            echo "<li class='nav-item'><a class='nav-link' href='/raj-news/category/" . $category['slug'] . "'>" . htmlspecialchars($category['name']) . "</a></li>";
+                            echo "<li class='nav-item'><a class='nav-link' href='/express-news/category/" . $category['slug'] . "'>" . htmlspecialchars($category['name']) . "</a></li>";
                         }
                         if (!empty($more_categories)) {
                             echo '<li class="nav-item dropdown">';
                             echo '<a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>';
                             echo '<ul class="dropdown-menu" aria-labelledby="moreDropdown">';
                             foreach ($more_categories as $category) {
-                                echo '<li><a class="dropdown-item" href="/raj-news/category/' . $category['slug'] . '">' . htmlspecialchars($category['name']) . '</a></li>';
+                                echo '<li><a class="dropdown-item" href="/express-news/category/' . $category['slug'] . '">' . htmlspecialchars($category['name']) . '</a></li>';
                             }
                             echo '</ul></li>';
                         }
@@ -145,13 +145,13 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
                         <div class="profile-dropdown" id="profile-dropdown">
                              <?php if (isset($_SESSION['user_loggedin'])): ?>
                                 <div class="dropdown-header">Hello, <?php echo htmlspecialchars($_SESSION['user_username']); ?>!</div>
-                                <a href="/raj-news/user/profile.php" class="dropdown-item">My Profile</a>
-                                <a href="/raj-news/user/edit-profile.php" class="dropdown-item">Settings</a>
+                                <a href="/express-news/user/profile.php" class="dropdown-item">My Profile</a>
+                                <a href="/express-news/user/edit-profile.php" class="dropdown-item">Settings</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="/raj-news/user/logout.php" class="dropdown-item">Logout</a>
+                                <a href="/express-news/user/logout.php" class="dropdown-item">Logout</a>
                             <?php else: ?>
-                                <a href="/raj-news/user/login.php" class="dropdown-item">Login</a>
-                                <a href="/raj-news/user/register.php" class="dropdown-item">Register</a>
+                                <a href="/express-news/user/login.php" class="dropdown-item">Login</a>
+                                <a href="/express-news/user/register.php" class="dropdown-item">Register</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -169,9 +169,9 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
             <ul class="navbar-nav mobile-nav-items">
                 <?php
                 // We re-run the category loop for the mobile menu
-                echo "<li class='nav-item'><a class='nav-link' href='/raj-news/'>Home</a></li>";
+                echo "<li class='nav-item'><a class='nav-link' href='/express-news/'>Home</a></li>";
                 foreach ($all_categories as $category) { // Use the full list here
-                    echo "<li class='nav-item'><a class='nav-link' href='/raj-news/category/" . $category['slug'] . "'>" . htmlspecialchars($category['name']) . "</a></li>";
+                    echo "<li class='nav-item'><a class='nav-link' href='/express-news/category/" . $category['slug'] . "'>" . htmlspecialchars($category['name']) . "</a></li>";
                 }
                 ?>
             </ul>
@@ -181,7 +181,7 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
     <!-- Search Bar (Toggled by JS) -->
     <div class="search-bar-container" id="search-bar-container">
         <div class="container">
-            <form class="d-flex p-2" action="/raj-news/search.php" method="GET">
+            <form class="d-flex p-2" action="/express-news/search.php" method="GET">
                 <input class="form-control me-2" type="search" name="query" placeholder="Type to search..." required>
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>

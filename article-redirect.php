@@ -15,7 +15,7 @@ if ($post_id > 0) {
     if ($post = mysqli_fetch_assoc($result)) {
         $slug = $post['slug'];
         // Construct the clean, final URL
-        $new_url = '/raj-news/news/' . $slug;
+        $new_url = '/express-news/news/' . $slug;
         
         // Perform a 301 Permanent Redirect
         header("HTTP/1.1 301 Moved Permanently");
@@ -26,6 +26,6 @@ if ($post_id > 0) {
 
 // If post not found or no ID given, redirect to the homepage
 header("HTTP/1.1 404 Not Found");
-header("Location: /raj-news/");
+header("Location: /express-news/");
 exit();
 ?>

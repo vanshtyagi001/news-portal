@@ -1,6 +1,6 @@
 <?php
 /**
- * Raj News - Single Article Page (v11.0 - Pro Sharing & URLs)
+ * Express News - Single Article Page (v11.0 - Pro Sharing & URLs)
  * This file displays a single news article with all its related data.
  */
 
@@ -14,7 +14,7 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 // The .htaccess file will now pass the slug via $_GET['slug']
 $slug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
 if (empty($slug)) {
-    header("Location: /raj-news/");
+    header("Location: /express-news/");
     exit();
 }
 
@@ -45,7 +45,7 @@ $post_id = $post['id'];
 //
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 $domain_name = $_SERVER['HTTP_HOST'];
-$base_url = $protocol . $domain_name . '/raj-news/';
+$base_url = $protocol . $domain_name . '/express-news/';
 
 // 1. Canonical URL (the "true", pretty URL for this page)
 $canonical_url = $base_url . "news/" . $post['slug'];
@@ -76,7 +76,7 @@ $json_ld_data = [
     'author' => ['@type' => 'Person', 'name' => $post['author_name']],
     'publisher' => [
         '@type' => 'Organization',
-        'name' => 'Raj News',
+        'name' => 'Express News',
         'logo' => ['@type' => 'ImageObject', 'url' => $base_url . 'assets/images/logo.png'] // Make sure you have this logo image
     ],
     'description' => $page_description
@@ -185,7 +185,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
             if ($ticker_result && mysqli_num_rows($ticker_result) > 0) {
                 while ($ticker_post = mysqli_fetch_assoc($ticker_result)) {
                     // Use the clean, pretty URL format
-                    $post_url = "/raj-news/news/" . htmlspecialchars($ticker_post['slug']);
+                    $post_url = "/express-news/news/" . htmlspecialchars($ticker_post['slug']);
                     // Output the link for the article
                     echo '<a href="' . $post_url . '">' . htmlspecialchars($ticker_post['title']) . '</a>';
                     // Add a separator for visual distinction between headlines
@@ -193,7 +193,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
                 }
             } else {
                 // Display a fallback message if there are no news articles yet
-                echo '<span>Welcome to Raj News! More headlines coming soon.</span>';
+                echo '<span>Welcome to Express News! More headlines coming soon.</span>';
             }
             ?>
         </div>
@@ -217,7 +217,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
                 </div>
                 <div class="my-2">
                     <?php foreach($post_categories as $p_cat): ?>
-                        <a class="badge bg-primary text-decoration-none link-light me-1" href="/raj-news/category/<?php echo $p_cat['slug']; ?>">
+                        <a class="badge bg-primary text-decoration-none link-light me-1" href="/express-news/category/<?php echo $p_cat['slug']; ?>">
                             <?php echo htmlspecialchars($p_cat['name']); ?>
                         </a>
                     <?php endforeach; ?>
@@ -258,7 +258,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
         <div class="tags-section mb-4 p-3 bg-light border rounded">
             <strong><i class="fa-solid fa-tags me-2"></i>Tags:</strong>
             <?php foreach($post_tags as $p_tag): ?>
-                <a href="/raj-news/tag/<?php echo $p_tag['slug']; ?>" class="badge bg-secondary text-decoration-none link-light me-1">
+                <a href="/express-news/tag/<?php echo $p_tag['slug']; ?>" class="badge bg-secondary text-decoration-none link-light me-1">
                     <?php echo htmlspecialchars($p_tag['name']); ?>
                 </a>
             <?php endforeach; ?>
@@ -330,7 +330,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
                         while($comment = mysqli_fetch_assoc($comments_result)) {
                             $avatar_path = 'https://dummyimage.com/50x50/ced4da/6c757d.jpg';
                             if (!empty($comment['avatar'])) {
-                                $avatar_path = '/raj-news/' . htmlspecialchars($comment['avatar']);
+                                $avatar_path = '/express-news/' . htmlspecialchars($comment['avatar']);
                             }
                     ?>
                     <div class="d-flex mb-3 comment">
@@ -375,7 +375,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
                     <li class="d-flex align-items-start mb-3">
                         <span class="trending-rank"><?php echo $rank++; ?></span>
                         <div>
-                            <a href="/raj-news/news/<?php echo $trending_post['slug']; ?>" class="trending-title"><?php echo htmlspecialchars($trending_post['title']); ?></a>
+                            <a href="/express-news/news/<?php echo $trending_post['slug']; ?>" class="trending-title"><?php echo htmlspecialchars($trending_post['title']); ?></a>
                             <?php if(isset($settings['show_view_count']) && $settings['show_view_count'] == '1'): ?>
                                 <div class="trending-views text-muted small"><?php echo number_format($trending_post['view_count']); ?> Views</div>
                             <?php endif; ?>
@@ -418,7 +418,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
                     foreach($related_posts as $related_post) {
                         $related_image_paths = getImagePaths($related_post['featured_image']);
                 ?>
-                <a href="/raj-news/news/<?php echo $related_post['slug']; ?>" class="related-article-card mb-3">
+                <a href="/express-news/news/<?php echo $related_post['slug']; ?>" class="related-article-card mb-3">
                     <picture>
                         <source srcset="<?php echo $related_image_paths['webp']; ?>" type="image/webp">
                         <source srcset="<?php echo $related_image_paths['jpg']; ?>" type="image/jpeg">

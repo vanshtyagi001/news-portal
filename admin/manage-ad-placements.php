@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assign_ad'])) {
             <div class="card-body layout-preview-container">
                 <svg viewBox="0 0 800 600" style="width: 100%; height: auto; border: 1px solid #dee2e6;">
                     <rect x="1" y="1" width="798" height="598" fill="#fff" />
-                    <rect x="20" y="20" width="760" height="60" fill="#343a40" /><text x="40" y="55" fill="#fff" font-size="24">Raj News</text>
+                    <rect x="20" y="20" width="760" height="60" fill="#343a40" /><text x="40" y="55" fill="#fff" font-size="24">Express News</text>
                     <rect class="ad-hotspot" id="hook-header_top" data-hook="header_top" data-desc="Header Banner" x="50" y="100" width="700" height="70" />
                     <rect x="50" y="190" width="450" height="400" fill="#f8f9fa" />
                     <rect x="530" y="190" width="220" height="300" fill="#f8f9fa" />

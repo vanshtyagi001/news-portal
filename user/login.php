@@ -8,7 +8,7 @@ $error = "";
 
 // If user is already logged in, redirect them to the homepage.
 if (isset($_SESSION['user_loggedin'])) { 
-    header("Location: /raj-news/index.php"); 
+    header("Location: /express-news/index.php"); 
     exit; 
 }
 
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["user_loggedin"] = true;
                             $_SESSION["user_id"] = $id;
                             $_SESSION["user_username"] = $username;                            
-                            header("location: /raj-news/index.php?status=login_success");
+                            header("location: /express-news/index.php?status=login_success");
                             exit;
                         } else {
                             $error = "Invalid email or password.";

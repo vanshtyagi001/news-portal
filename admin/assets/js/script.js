@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressContainer.insertAdjacentHTML('beforeend', progressHTML);
         
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/raj-news/admin/media-upload-handler.php', true);
+        xhr.open('POST', '/express-news/admin/media-upload-handler.php', true);
         xhr.upload.onprogress = (e) => {
             if (e.lengthComputable) {
                 const percent = Math.round((e.loaded / e.total) * 100);
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage = page;
         mediaGrid.innerHTML = '<p class="text-muted text-center p-3">Loading media...</p>';
         try {
-            const response = await fetch(`/raj-news/admin/ajax-media-handler.php?action=get_all_media&page=${page}`);
+            const response = await fetch(`/express-news/admin/ajax-media-handler.php?action=get_all_media&page=${page}`);
             if (!response.ok) throw new Error('Network response was not ok.');
             const data = await response.json();
             
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let thumbnailHTML = '';
-        const uploadsUrl = '/raj-news/uploads/';
+        const uploadsUrl = '/express-news/uploads/';
         if (item.file_type.startsWith('image/')) {
             const src = uploadsUrl + (parseInt(item.is_image_optimized) ? item.filename.replace(/\.[^/.]+$/, ".webp") : item.filename);
             thumbnailHTML = `<img src="${src}" alt="${item.alt_text || ''}" loading="lazy">`;
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 toggleSelection(mediaItemDiv, item.id);
             } else if (isPicker) {
-                const publicUrl = `${window.location.origin}/raj-news/uploads/${item.filename}`;
+                const publicUrl = `${window.location.origin}/express-news/uploads/${item.filename}`;
                 window.parent.postMessage({ source: 'velion-media-manager', action: 'insert_media', fileType: item.file_type, url: publicUrl, alt: item.alt_text || item.title || '' }, '*');
             } else {
                 document.querySelectorAll('.media-item.active').forEach(el => el.classList.remove('active'));
@@ -212,14 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
         detailsFormContent.innerHTML = '<p class="text-muted p-3">Loading Details...</p>';
 
         try {
-            const response = await fetch(`/raj-news/admin/ajax-media-handler.php?action=get_media_details&id=${mediaId}`);
+            const response = await fetch(`/express-news/admin/ajax-media-handler.php?action=get_media_details&id=${mediaId}`);
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
             const data = await response.json();
             if (data.error) throw new Error(data.error);
 
             // Populate Preview Pane
             let previewHTML = '';
-            const publicUrl = `/raj-news/uploads/${data.filename}`;
+            const publicUrl = `/express-news/uploads/${data.filename}`;
             if (data.file_type.startsWith('image/')) {
                 const webpUrl = parseInt(data.is_image_optimized) ? publicUrl.replace(/\.[^/.]+$/, ".webp") : publicUrl;
                 previewHTML = `<picture><source srcset="${webpUrl}" type="image/webp"><img src="${publicUrl}" alt="Preview"></picture>`;
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.id === 'delete-btn') {
                 if (confirm('Are you sure you want to permanently delete this file? This cannot be undone.')) {
                     try {
-                        const response = await fetch('/raj-news/admin/ajax-media-handler.php', {
+                        const response = await fetch('/express-news/admin/ajax-media-handler.php', {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({ action: 'delete_media', id: currentSelectedId })
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 
                 try {
-                    const response = await fetch('/raj-news/admin/ajax-media-handler.php', {
+                    const response = await fetch('/express-news/admin/ajax-media-handler.php', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify(updatedData)
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (selectedItems.size === 0) return;
             if (confirm(`Are you sure you want to delete ${selectedItems.size} items? This cannot be undone.`)) {
                 try {
-                    const response = await fetch('/raj-news/admin/ajax-media-handler.php', {
+                    const response = await fetch('/express-news/admin/ajax-media-handler.php', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ action: 'bulk_delete', ids: Array.from(selectedItems) })

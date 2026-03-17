@@ -75,7 +75,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="card profile-avatar-card shadow-sm mb-4">
             <div class="card-body">
                 <?php 
-                $avatar_path = !empty($user['avatar']) ? '/raj-news/' . $user['avatar'] : 'https://dummyimage.com/150x150/ced4da/6c757d.jpg'; 
+                $avatar_path = !empty($user['avatar']) ? '/express-news/' . $user['avatar'] : 'https://dummyimage.com/150x150/ced4da/6c757d.jpg'; 
                 ?>
                 <img src="<?php echo $avatar_path; ?>" class="rounded-circle profile-avatar" alt="User Avatar">
                 <h4 class="card-title mt-3 mb-1"><?php echo htmlspecialchars($user['username']); ?></h4>
@@ -115,8 +115,8 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="card-body">
                 <?php if(!empty($bookmarks)): ?>
                     <?php foreach($bookmarks as $bookmark): ?>
-                        <a href="/raj-news/news.php?slug=<?php echo $bookmark['slug']; ?>" class="related-article-card mb-3">
-                            <img src="/raj-news/<?php echo htmlspecialchars($bookmark['featured_image']); ?>" alt="<?php echo htmlspecialchars($bookmark['title']); ?>" class="related-article-img">
+                        <a href="/express-news/news.php?slug=<?php echo $bookmark['slug']; ?>" class="related-article-card mb-3">
+                            <img src="/express-news/<?php echo htmlspecialchars($bookmark['featured_image']); ?>" alt="<?php echo htmlspecialchars($bookmark['title']); ?>" class="related-article-img">
                             <div class="card-body">
                                 <h6 class="card-title"><?php echo htmlspecialchars($bookmark['title']); ?></h6>
                                 <p class="card-text"><?php echo htmlspecialchars($bookmark['summary']); ?></p>
@@ -138,7 +138,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="comment-history-item">
                             <blockquote><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></blockquote>
                             <p class="mb-0">
-                                <a href="/raj-news/news.php?slug=<?php echo $comment['post_slug']; ?>" class="meta-link">
+                                <a href="/express-news/news.php?slug=<?php echo $comment['post_slug']; ?>" class="meta-link">
                                     Commented on <strong><?php echo htmlspecialchars($comment['post_title']); ?></strong>
                                 </a>
                                 <span class="text-muted ms-2">- <?php echo date('F j, Y', strtotime($comment['created_at'])); ?></span>

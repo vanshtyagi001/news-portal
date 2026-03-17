@@ -1,6 +1,6 @@
 <?php
 /**
- * Raj News - AJAX Load More Handler (v9.2 - Final Image Fix)
+ * Express News - AJAX Load More Handler (v9.2 - Final Image Fix)
  * This script is called by the "Load More" button on the homepage.
  * It fetches the next set of articles for a given category and returns the HTML.
  */
@@ -38,7 +38,7 @@ if ($category_id > 0 && $offset >= 0) {
             ?>
             <div class="col-md-6 col-lg-3 mb-4">
                 <div class="card h-100 shadow-sm news-card">
-                     <a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>">
+                     <a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>">
                         <picture>
                             <source srcset="<?php echo $image_paths['webp']; ?>" type="image/webp">
                             <source srcset="<?php echo $image_paths['jpg']; ?>" type="image/jpeg">
@@ -46,8 +46,8 @@ if ($category_id > 0 && $offset >= 0) {
                         </picture>
                     </a>
                     <div class="card-body d-flex flex-column">
-                         <h6 class="card-title mb-auto"><a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h6>
-                         <a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>" class="btn btn-sm btn-outline-primary mt-3 align-self-start">Read More</a>
+                         <h6 class="card-title mb-auto"><a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h6>
+                         <a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>" class="btn btn-sm btn-outline-primary mt-3 align-self-start">Read More</a>
                     </div>
                 </div>
             </div>

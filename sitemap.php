@@ -6,7 +6,7 @@ require_once 'admin/includes/db.php';
 
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 $domain_name = $_SERVER['HTTP_HOST'];
-$base_url = $protocol . $domain_name . '/raj-news/';
+$base_url = $protocol . $domain_name . '/express-news/';
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";

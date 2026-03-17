@@ -68,7 +68,7 @@ require_once __DIR__ . '/../includes/header.php';
         <!-- Profile Avatar Card -->
         <div class="card profile-avatar-card shadow-sm mb-4">
             <div class="card-body">
-                <?php $avatar_path = !empty($user['avatar']) ? '/raj-news/' . $user['avatar'] : 'https://dummyimage.com/150x150/ced4da/6c757d.jpg'; ?>
+                <?php $avatar_path = !empty($user['avatar']) ? '/express-news/' . $user['avatar'] : 'https://dummyimage.com/150x150/ced4da/6c757d.jpg'; ?>
                 <img src="<?php echo $avatar_path; ?>" class="rounded-circle profile-avatar" alt="User Avatar">
                 <h4 class="card-title mt-3 mb-1"><?php echo htmlspecialchars($user['username']); ?></h4>
                 <p class="card-text text-muted">Member since <?php echo date('F Y', strtotime($user['created_at'])); ?></p>

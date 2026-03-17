@@ -1,11 +1,11 @@
 <?php
 /**
- * Raj News - Homepage (v9.2 - Final Image Fix)
+ * Express News - Homepage (v9.2 - Final Image Fix)
  * This is the main landing page for the website.
  */
 
 // Set page-specific variables for SEO and the <title> tag.
-$page_title = 'Raj News - Your Daily News Source';
+$page_title = 'Express News - Your Daily News Source';
 $page_description = 'Get the latest breaking news and updates on politics, technology, sports, and more. Your reliable source for daily news.';
 
 // Include the header. This single line handles the DB connection, session start, and main navigation.
@@ -35,7 +35,7 @@ require_once 'includes/header.php';
                 $image_paths = getImagePaths($post['featured_image']);
         ?>
         <div class="carousel-item <?php echo $active; ?>">
-            <a href="/raj-news/news/<?php echo $post['slug']; ?>">
+            <a href="/express-news/news/<?php echo $post['slug']; ?>">
                 <picture>
                     <source srcset="<?php echo $image_paths['webp']; ?>" type="image/webp">
                     <source srcset="<?php echo $image_paths['jpg']; ?>" type="image/jpeg">
@@ -43,7 +43,7 @@ require_once 'includes/header.php';
                 </picture>
             </a>
             <div class="carousel-caption">
-                <h5><a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h5>
+                <h5><a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h5>
                 <p class="d-none d-sm-block"><?php echo htmlspecialchars($post['summary']); ?></p>
             </div>
         </div>
@@ -86,7 +86,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
             if ($ticker_result && mysqli_num_rows($ticker_result) > 0) {
                 while ($ticker_post = mysqli_fetch_assoc($ticker_result)) {
                     // Use the clean, pretty URL format
-                    $post_url = "/raj-news/news/" . htmlspecialchars($ticker_post['slug']);
+                    $post_url = "/express-news/news/" . htmlspecialchars($ticker_post['slug']);
                     // Output the link for the article
                     echo '<a href="' . $post_url . '">' . htmlspecialchars($ticker_post['title']) . '</a>';
                     // Add a separator for visual distinction between headlines
@@ -94,7 +94,7 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
                 }
             } else {
                 // Display a fallback message if there are no news articles yet
-                echo '<span>Welcome to Raj News! More headlines coming soon.</span>';
+                echo '<span>Welcome to Express News! More headlines coming soon.</span>';
             }
             ?>
         </div>
@@ -120,7 +120,7 @@ if ($categories_result) {
             if ($cat_posts_result && mysqli_num_rows($cat_posts_result) > 0) {
 ?>
 <div class="category-section mb-5">
-    <h2 class="mb-3 border-bottom pb-2"><a href="/raj-news/category.php?slug=<?php echo $category['slug']; ?>"><?php echo htmlspecialchars($category['name']); ?></a></h2>
+    <h2 class="mb-3 border-bottom pb-2"><a href="/express-news/category.php?slug=<?php echo $category['slug']; ?>"><?php echo htmlspecialchars($category['name']); ?></a></h2>
     <div class="row" id="post-container-<?php echo $category['id']; ?>">
         <?php while ($post = mysqli_fetch_assoc($cat_posts_result)) { 
             // Use our new helper function again here
@@ -128,7 +128,7 @@ if ($categories_result) {
         ?>
         <div class="col-md-6 col-lg-3 mb-4">
             <div class="card h-100 shadow-sm news-card">
-                 <a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>">
+                 <a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>">
                     <picture>
                         <source srcset="<?php echo $image_paths['webp']; ?>" type="image/webp">
                         <source srcset="<?php echo $image_paths['jpg']; ?>" type="image/jpeg">
@@ -136,8 +136,8 @@ if ($categories_result) {
                     </picture>
                 </a>
                 <div class="card-body d-flex flex-column">
-                     <h6 class="card-title mb-auto"><a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h6>
-                     <a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>" class="btn btn-sm btn-outline-primary mt-3 align-self-start">Read More</a>
+                     <h6 class="card-title mb-auto"><a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h6>
+                     <a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>" class="btn btn-sm btn-outline-primary mt-3 align-self-start">Read More</a>
                 </div>
             </div>
         </div>

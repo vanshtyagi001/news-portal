@@ -1,6 +1,6 @@
 <?php
 /**
- * Raj News - Category Archive Page (v9.2 - Final Image Fix)
+ * Express News - Category Archive Page (v9.2 - Final Image Fix)
  * This page displays a paginated list of all articles within a specific category.
  */
 
@@ -33,7 +33,7 @@ if (!$category) {
 }
 
 // Dynamically update the page title using JavaScript because the header is already loaded.
-echo "<script>document.title = 'News in " . addslashes(htmlspecialchars($category['name'])) . " - Raj News';</script>";
+echo "<script>document.title = 'News in " . addslashes(htmlspecialchars($category['name'])) . " - Express News';</script>";
 
 // --- Setup Pagination ---
 $posts_per_page = 9;
@@ -81,7 +81,7 @@ mysqli_stmt_close($stmt_posts);
             ?>
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100 shadow-sm news-card">
-                    <a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>">
+                    <a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>">
                         <picture>
                             <source srcset="<?php echo $image_paths['webp']; ?>" type="image/webp">
                             <source srcset="<?php echo $image_paths['jpg']; ?>" type="image/jpeg">
@@ -89,10 +89,10 @@ mysqli_stmt_close($stmt_posts);
                         </picture>
                     </a>
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title"><a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h5>
+                        <h5 class="card-title"><a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h5>
                         <p class="card-text text-muted small mt-auto mb-2"><?php echo date('F d, Y', strtotime($post['created_at'])); ?></p>
                         <p class="card-text flex-grow-1"><?php echo htmlspecialchars($post['summary']); ?></p>
-                        <a href="/raj-news/news.php?slug=<?php echo $post['slug']; ?>" class="btn btn-primary align-self-start">Read More</a>
+                        <a href="/express-news/news.php?slug=<?php echo $post['slug']; ?>" class="btn btn-primary align-self-start">Read More</a>
                     </div>
                 </div>
             </div>

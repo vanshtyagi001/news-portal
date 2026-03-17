@@ -18,7 +18,7 @@ function display_ads_for_hook($conn, $hook_name) {
     while ($ad = mysqli_fetch_assoc($result)) {
         echo '<div class="ad-container ad-hook-' . htmlspecialchars($hook_name) . ' mb-3">';
         if ($ad['ad_type'] === 'image' && !empty($ad['ad_content'])) {
-            $image_url = '/raj-news/' . htmlspecialchars($ad['ad_content']);
+            $image_url = '/express-news/' . htmlspecialchars($ad['ad_content']);
             $link_url = !empty($ad['ad_link']) ? htmlspecialchars($ad['ad_link']) : '#';
             echo '<a href="' . $link_url . '" target="_blank" rel="noopener sponsored">';
             echo '<img src="' . $image_url . '" alt="Advertisement" style="max-width: 100%; height: auto; border: 1px solid #ddd;">';

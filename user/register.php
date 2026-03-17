@@ -1,6 +1,6 @@
 <?php
 /**
- * Raj News - User Registration Page (v13.5 - Include Fix)
+ * Express News - User Registration Page (v13.5 - Include Fix)
  */
 
 // We process the form submission BEFORE any HTML is outputted.
@@ -9,7 +9,7 @@ $errors = [];
 
 // If user is already logged in, redirect them away.
 if (isset($_SESSION['user_loggedin'])) { 
-    header("Location: /raj-news/user/profile.php"); 
+    header("Location: /express-news/user/profile.php"); 
     exit; 
 }
 

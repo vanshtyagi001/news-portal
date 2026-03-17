@@ -102,7 +102,7 @@ while($row = mysqli_fetch_assoc($result)){
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="site_name" class="form-label"><strong>Website Name</strong></label>
-                        <input type="text" class="form-control" id="site_name" name="site_name" value="<?php echo htmlspecialchars($settings['site_name'] ?? 'Raj News'); ?>">
+                        <input type="text" class="form-control" id="site_name" name="site_name" value="<?php echo htmlspecialchars($settings['site_name'] ?? 'Express News'); ?>">
                     </div>
                 </div>
                 <div class="col-md-6">
