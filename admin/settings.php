@@ -7,42 +7,118 @@ if ($_SESSION['admin_role'] !== 'super_admin') {
 
 // Helper function to update a setting in the database
 function update_setting($conn, $setting_name, $setting_value) {
-    $stmt = mysqli_prepare($conn, "UPDATE settings SET setting_value = ? WHERE setting_name = ?");
-    mysqli_stmt_bind_param($stmt, "ss", $setting_value, $setting_name);
+    $stmt = mysqli_prepare($conn, "INSERT INTO settings (setting_name, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
+    mysqli_stmt_bind_param($stmt, "ss", $setting_name, $setting_value);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 }
 
+function get_upload_error_message($error_code) {
+    switch ($error_code) {
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            return 'File is too large for upload limits.';
+        case UPLOAD_ERR_PARTIAL:
+            return 'File upload was incomplete. Please try again.';
+        case UPLOAD_ERR_NO_TMP_DIR:
+            return 'Temporary upload directory is missing.';
+        case UPLOAD_ERR_CANT_WRITE:
+            return 'Server could not write the uploaded file.';
+        case UPLOAD_ERR_EXTENSION:
+            return 'Upload blocked by a PHP extension.';
+        default:
+            return 'Unknown upload error.';
+    }
+}
+
 // Helper function for logo/favicon uploads
-function handle_identity_upload($file_input_name, $current_path) {
-    if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] == 0) {
-        $target_dir = "../assets/images/";
-        if (!is_dir($target_dir)) { mkdir($target_dir, 0775, true); }
-        
-        // Sanitize filename to prevent security issues
-        $filename = time() . '_' . preg_replace("/[^a-zA-Z0-9\._-]/", "", basename($_FILES[$file_input_name]["name"]));
-        $target_file = $target_dir . $filename;
-        
-        // Add more robust validation (file type, size)
-        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon', 'image/svg+xml'];
-        if (!in_array($_FILES[$file_input_name]['type'], $allowed_types)) {
-            return $current_path; // Or return an error message
-        }
-        
-        if (move_uploaded_file($_FILES[$file_input_name]["tmp_name"], $target_file)) {
-            // Delete old file if it exists and is not a default one
-            if (!empty($current_path) && strpos($current_path, 'logo.png') === false && strpos($current_path, 'favicon.ico') === false && file_exists("../" . $current_path)) {
-                unlink("../" . $current_path);
-            }
-            return "assets/images/" . $filename; // Return the new path
+function handle_identity_upload($file_input_name, $current_path, &$upload_errors) {
+    if (!isset($_FILES[$file_input_name])) {
+        return $current_path;
+    }
+
+    $file = $_FILES[$file_input_name];
+    $input_label = ucwords(str_replace('_', ' ', $file_input_name));
+
+    if ((int)$file['error'] === UPLOAD_ERR_NO_FILE) {
+        return $current_path;
+    }
+
+    if ((int)$file['error'] !== UPLOAD_ERR_OK) {
+        $upload_errors[] = $input_label . ': ' . get_upload_error_message((int)$file['error']);
+        return $current_path;
+    }
+
+    $target_dir = __DIR__ . '/../assets/images/';
+    if (!is_dir($target_dir) && !mkdir($target_dir, 0775, true)) {
+        $upload_errors[] = $input_label . ': Could not create assets/images directory.';
+        return $current_path;
+    }
+
+    if (!is_writable($target_dir)) {
+        $upload_errors[] = $input_label . ': assets/images is not writable by PHP.';
+        return $current_path;
+    }
+
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico'];
+    $allowed_mimes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/svg+xml',
+        'image/x-icon',
+        'image/vnd.microsoft.icon'
+    ];
+
+    $original_name = basename($file['name']);
+    $extension = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
+    if (!in_array($extension, $allowed_extensions, true)) {
+        $upload_errors[] = $input_label . ': Invalid file extension. Use JPG, PNG, GIF, WEBP, SVG, or ICO.';
+        return $current_path;
+    }
+
+    $detected_mime = '';
+    if (function_exists('finfo_open')) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo) {
+            $detected_mime = finfo_file($finfo, $file['tmp_name']);
+            finfo_close($finfo);
         }
     }
+    if (!empty($detected_mime) && !in_array($detected_mime, $allowed_mimes, true)) {
+        $upload_errors[] = $input_label . ': Invalid file type detected.';
+        return $current_path;
+    }
+
+    $base_name = preg_replace('/[^a-zA-Z0-9_-]/', '', pathinfo($original_name, PATHINFO_FILENAME));
+    if (empty($base_name)) {
+        $base_name = 'site_identity';
+    }
+    $filename = time() . '_' . $base_name . '.' . $extension;
+    $target_file = $target_dir . $filename;
+
+    if (move_uploaded_file($file['tmp_name'], $target_file)) {
+        // Delete old file only when it is a custom uploaded identity file.
+        $default_files = ['assets/images/logo.png', 'assets/images/favicon.ico'];
+        if (!empty($current_path) && !in_array($current_path, $default_files, true)) {
+            $old_file = __DIR__ . '/../' . ltrim($current_path, '/\\');
+            if (file_exists($old_file)) {
+                unlink($old_file);
+            }
+        }
+        return 'assets/images/' . $filename;
+    }
+
+    $upload_errors[] = $input_label . ': Upload failed while moving file.';
     return $current_path; // Return old path if upload fails or no new file
 }
 
 
 // --- FORM PROCESSING BLOCK ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $upload_errors = [];
+
     // We MUST fetch the current settings first to handle file uploads correctly
     $current_settings = [];
     $fetch_result = mysqli_query($conn, "SELECT setting_name, setting_value FROM settings");
@@ -51,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Handle logo and favicon uploads, using current settings as a fallback
-    $new_logo_path = handle_identity_upload('site_logo', $current_settings['site_logo'] ?? '');
-    $new_favicon_path = handle_identity_upload('site_favicon', $current_settings['site_favicon'] ?? '');
+    $new_logo_path = handle_identity_upload('site_logo', $current_settings['site_logo'] ?? '', $upload_errors);
+    $new_favicon_path = handle_identity_upload('site_favicon', $current_settings['site_favicon'] ?? '', $upload_errors);
 
     // Prepare an array of all settings to update
     $settings_to_update = [
@@ -70,6 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($settings_to_update as $name => $value) {
         update_setting($conn, $name, $value);
     }
+
+    if (!empty($upload_errors)) {
+        $_SESSION['settings_upload_errors'] = $upload_errors;
+    }
     
     // --- THE CRITICAL FIX IS HERE ---
     // Redirect back to the same page with a success message.
@@ -85,12 +165,23 @@ $result = mysqli_query($conn, "SELECT setting_name, setting_value FROM settings"
 while($row = mysqli_fetch_assoc($result)){
     $settings[$row['setting_name']] = $row['setting_value'];
 }
+
+$upload_errors = $_SESSION['settings_upload_errors'] ?? [];
+unset($_SESSION['settings_upload_errors']);
 ?>
 
 <div class="content-header"><h2>Site Settings</h2></div>
 
 <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
     <div class="alert alert-success">Settings updated successfully!</div>
+<?php endif; ?>
+
+<?php if (!empty($upload_errors)): ?>
+    <div class="alert alert-warning">
+        <?php foreach ($upload_errors as $upload_error): ?>
+            <p class="mb-0"><?php echo htmlspecialchars($upload_error); ?></p>
+        <?php endforeach; ?>
+    </div>
 <?php endif; ?>
 
 <!-- Site Identity Card -->
@@ -116,7 +207,7 @@ while($row = mysqli_fetch_assoc($result)){
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="site_logo" class="form-label"><strong>Site Logo (PNG recommended)</strong></label>
-                        <input type="file" class="form-control" id="site_logo" name="site_logo">
+                        <input type="file" class="form-control" id="site_logo" name="site_logo" accept=".png,.jpg,.jpeg,.gif,.webp,.svg,.ico">
                         <div class="mt-2">
                             <small>Current Logo:</small><br>
                             <img src="../<?php echo htmlspecialchars($settings['site_logo'] ?? ''); ?>" height="40" alt="Current Logo" style="background: #eee; padding: 5px; border-radius: 5px;">
@@ -126,7 +217,7 @@ while($row = mysqli_fetch_assoc($result)){
                 <div class="col-md-6">
                      <div class="form-group">
                         <label for="site_favicon" class="form-label"><strong>Favicon (.ico, .png)</strong></label>
-                        <input type="file" class="form-control" id="site_favicon" name="site_favicon">
+                                <input type="file" class="form-control" id="site_favicon" name="site_favicon" accept=".png,.jpg,.jpeg,.gif,.webp,.svg,.ico">
                          <div class="mt-2">
                             <small>Current Favicon:</small><br>
                             <img src="../<?php echo htmlspecialchars($settings['site_favicon'] ?? ''); ?>" width="32" alt="Current Favicon">

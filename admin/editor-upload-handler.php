@@ -39,8 +39,15 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
     $optimized_basename = optimize_image($file["tmp_name"], $destination_path_no_ext);
 
     if ($optimized_basename) {
-        // Success! Send back the public URL of the JPG version.
-        $public_url = '/express-news/uploads/' . $optimized_basename . '.jpg';
+        // Success! Support both return formats:
+        // - optimized basename (e.g., editor_img_12345)
+        // - filename with extension fallback (e.g., editor_img_12345.png)
+        $stored_ext = pathinfo($optimized_basename, PATHINFO_EXTENSION);
+        if (!empty($stored_ext)) {
+            $public_url = '/express-news/uploads/' . $optimized_basename;
+        } else {
+            $public_url = '/express-news/uploads/' . $optimized_basename . '.jpg';
+        }
         echo json_encode(['status' => 'success', 'url' => $public_url]);
     } else {
         http_response_code(500);

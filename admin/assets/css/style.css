@@ -34,25 +34,166 @@ p { line-height: 1.6; }
 
 /* --- Authentication Pages (Login/Signup) --- */
 body.auth-page {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #f3f4f6; /* Modern solid light gray */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 1rem;
+    padding: 1.5rem;
 }
 .login-container {
     width: 100%;
-    max-width: 420px;
-    padding: 2.5rem;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 400px;
+    padding: 2.5rem 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    border: 1px solid #f3f4f6;
     text-align: center;
 }
-/* ... Other auth styles are fine as they are ... */
+.login-container .logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.25rem;
+    color: #111827;
+}
+.login-container .logo span {
+    color: #2563eb; /* Professional blue */
+}
+.login-container h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+}
+.auth-subtitle {
+    margin: 0.5rem 0 1.5rem;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.auth-page .form-group {
+    position: relative;
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+.auth-page .form-control {
+    height: 46px;
+    padding-left: 2.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #111827;
+    background-color: #f9fafb;
+    box-shadow: none;
+    transition: all 0.2s;
+}
+.auth-page .form-control:focus {
+    background-color: #ffffff;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    outline: none;
+}
+.auth-page .form-group .icon {
+    position: absolute;
+    left: 1rem;
+    top: 15px;
+    color: #9ca3af;
+    pointer-events: none;
+    font-size: 1rem;
+    z-index: 2;
+}
+
+/* Ensure role dropdown button matches new input style */
+.auth-page .dropdown .btn-outline-secondary {
+    height: 46px;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #111827;
+    display: flex;
+    align-items: center;
+}
+.auth-page .dropdown .btn-outline-secondary:focus,
+.auth-page .dropdown .btn-outline-secondary:active,
+.auth-page .dropdown.show .btn-outline-secondary {
+    background-color: #ffffff;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.auth-page button[type="submit"], .auth-page .btn {
+    width: 100%;
+    background-color: #111827; /* Dark modern button */
+    color: #ffffff;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    border: none;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 0.5rem;
+}
+.auth-page button[type="submit"]:hover, .auth-page .btn:hover {
+    background-color: #374151;
+}
+.auth-page button[type="submit"]:active, .auth-page .btn:active {
+    transform: scale(0.98);
+}
+
+.auth-page .alert {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    text-align: left;
+    font-size: 0.875rem;
+}
+.auth-page .alert-success {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+}
+.auth-page .alert-danger {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.auth-page .error {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    color: #dc2626;
+    margin-left: 2px;
+}
+.auth-page .is-invalid {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+.auth-page .is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+}
+
+.auth-links {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+.auth-links p {
+    margin: 0.5rem 0;
+}
+.auth-links a {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.auth-links a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
 
 
 /* --- Main Admin Wrapper & Sidebar --- */
@@ -81,6 +222,12 @@ body.auth-page {
     font-size: 1.5rem;
     font-weight: bold;
     color: #fff;
+}
+.sidebar-header .logo .admin-site-logo {
+    max-height: 36px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
 }
 .sidebar-header .logo span {
     color: var(--secondary-color);

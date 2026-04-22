@@ -93,7 +93,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 </head>
 <body class="auth-page">
     <div class="login-container">
-        <div class="logo">Raj<span>News</span></div>
+        <div class="logo">Express<span>News</span></div>
         <h2>Create New Admin Account</h2>
 
         <?php 
@@ -118,7 +118,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <div class="form-group">
                 <i class="fa-solid fa-user-shield icon"></i>
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="padding-left: 35px;">
+                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="padding-left: 2.8rem;">
                         Select Role
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="roleDropdown">

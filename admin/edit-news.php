@@ -71,13 +71,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($optimized_basename) {
             // New image was uploaded and optimized successfully
             // Delete old image files if they exist
-            if (!empty($current_image_base)) {
-                if(file_exists($target_dir . $current_image_base . '.jpg')) unlink($target_dir . $current_image_base . '.jpg');
-                if(file_exists($target_dir . $current_image_base . '.webp')) unlink($target_dir . $current_image_base . '.webp');
-            }
+            delete_post_image_files($current_image_base, $target_dir);
             $featured_image_base = $optimized_basename;
         } else {
-            $errors[] = "Sorry, there was an error processing your new featured image.";
+            $errors[] = "Sorry, there was an error processing your new featured image. Please ensure the file is a valid image and that PHP upload permissions are correct.";
         }
     }
 

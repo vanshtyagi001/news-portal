@@ -7,6 +7,12 @@ if(!isset($_SESSION["admin_loggedin"]) || $_SESSION["admin_loggedin"] !== true){
 }
 require_once 'db.php';
 
+$admin_site_logo = '';
+$admin_logo_result = mysqli_query($conn, "SELECT setting_value FROM settings WHERE setting_name = 'site_logo' LIMIT 1");
+if ($admin_logo_result && $admin_logo_row = mysqli_fetch_assoc($admin_logo_result)) {
+    $admin_site_logo = trim($admin_logo_row['setting_value']);
+}
+
 // Get the current page name to set the 'active' class on nav links.
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
@@ -34,7 +40,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <div class="admin-wrapper">
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <a href="dashboard.php" class="logo">Raj<span>News</span></a>
+                <a href="dashboard.php" class="logo">
+                    <?php if (!empty($admin_site_logo) && file_exists(__DIR__ . '/../../' . ltrim($admin_site_logo, '/\\'))): ?>
+                        <img src="../<?php echo htmlspecialchars($admin_site_logo); ?>" alt="Site Logo" class="admin-site-logo">
+                    <?php else: ?>
+                        Raj<span>News</span>
+                    <?php endif; ?>
+                </a>
             </div>
             <div class="admin-info">
                 <p><strong><?php echo htmlspecialchars($_SESSION['admin_username']); ?></strong></p>

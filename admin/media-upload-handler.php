@@ -33,8 +33,17 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
         $optimized_base = optimize_image($file["tmp_name"], $upload_dir . $image_base_name);
 
         if ($optimized_base) {
-            $safe_filename = $optimized_base . '.jpg';
-            $is_image_optimized = 1;
+            $optimized_ext = strtolower(pathinfo($optimized_base, PATHINFO_EXTENSION));
+            if (!empty($optimized_ext)) {
+                // Fallback mode (e.g., GD disabled): file is stored with its original extension.
+                $safe_filename = $optimized_base;
+                $optimized_stem = pathinfo($optimized_base, PATHINFO_FILENAME);
+                $is_image_optimized = file_exists($upload_dir . $optimized_stem . '.webp') ? 1 : 0;
+            } else {
+                // Standard optimized mode: JPG + WEBP generated.
+                $safe_filename = $optimized_base . '.jpg';
+                $is_image_optimized = file_exists($upload_dir . $optimized_base . '.webp') ? 1 : 0;
+            }
             $upload_success = true;
         } else {
             $upload_success = false;

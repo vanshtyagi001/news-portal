@@ -28,9 +28,7 @@ if ($post_id > 0) {
                 ($author_id == $_SESSION['admin_id'])
             ) {
                 // Permission granted, proceed with deletion
-                if (!empty($image_path) && file_exists("../" . $image_path)) {
-                    unlink("../" . $image_path);
-                }
+                delete_post_image_files($image_path, "../uploads/");
                 
                 $sql_delete = "DELETE FROM posts WHERE id = ?";
                 if ($stmt_delete = mysqli_prepare($conn, $sql_delete)) {

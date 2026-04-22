@@ -91,13 +91,16 @@ Defined in `.htaccess` (Apache `mod_rewrite`):
 
 1. Copy project to your web root.
 2. Keep the folder name aligned with rewrite/base-path usage (`express-news`) or update all hardcoded `/express-news/` paths.
-3. Create database:
+3. Create/import database schema (recommended):
 
-```sql
-CREATE DATABASE express_news_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```powershell
+cd c:\xampp\htdocs\express-news
+C:\xampp\mysql\bin\mysql.exe -u root < database\schema.sql
 ```
 
-4. Configure DB credentials in `admin/includes/db.php`:
+This will create the `express_news_db` database, all required tables, and default rows (settings, ad hooks, starter categories).
+
+4. Configure DB credentials in `admin/includes/db.php` if your local MySQL credentials differ from defaults:
 
 ```php
 define('DB_SERVER', 'localhost');
@@ -118,9 +121,13 @@ define('DB_NAME', 'express_news_db');
 - Public site: `http://localhost/express-news/`
 - Admin login: `http://localhost/express-news/admin/`
 
-## Database Schema (Inferred)
+## Database Schema
 
-No SQL dump is included in the repository. The following tables are required by the code:
+The repository now includes a setup-ready schema file:
+
+- `database/schema.sql`
+
+It creates all required tables used by the code:
 
 - `admins`
   - `id`, `username`, `password`, `full_name`, `role`, `created_at`
@@ -218,6 +225,10 @@ What should be improved before production:
 - Images not showing:
   - verify `featured_image` values and files in `uploads/`
   - ensure placeholder files exist in `assets/images/`
+- Fatal error like `Call to undefined function imagecreatetruecolor()`:
+  - enable GD in `C:\xampp\php\php.ini` by uncommenting `extension=gd`
+  - restart Apache after changing `php.ini`
+  - current code includes a no-GD fallback, but enabling GD is recommended for JPG/WebP optimization
 - Like/bookmark not working:
   - user must be logged in
   - check browser console/network for `ajax-handler.php` response
@@ -227,11 +238,7 @@ What should be improved before production:
 
 ## Recommended Next Improvement
 
-Create and commit a versioned SQL schema file, for example:
-
-- `database/schema.sql`
-
-This will make first-time setup and deployment predictable for all environments.
+Add a lightweight installer page or CLI bootstrap script that checks DB connectivity, verifies required PHP extensions, and guides first-time setup automatically.
 
 ## License
 

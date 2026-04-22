@@ -37,7 +37,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     mysqli_stmt_bind_result($stmt, $id, $db_username, $hashed_password, $role);
                     if(mysqli_stmt_fetch($stmt)){
                         if(password_verify($password, $hashed_password)){
-                            session_start();
                             $_SESSION["admin_loggedin"] = true;
                             $_SESSION["admin_id"] = $id;
                             $_SESSION["admin_username"] = $db_username;
@@ -69,12 +68,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Express News</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="auth-page">
     <div class="login-container">
-        <div class="logo">Raj<span>News</span></div>
+        <div class="logo">Express<span>News</span></div>
         <h2>Admin Panel Login</h2>
+        <p class="auth-subtitle">Sign in to manage posts, comments, media, and settings.</p>
 
         <?php if(isset($_GET['status']) && $_GET['status'] == 'signup_success'): ?>
             <div class="alert alert-success">Admin account created successfully! Please log in.</div>
@@ -82,26 +83,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         <?php 
         if(!empty($login_err)){
-            echo '<div class="alert alert-danger">' . $login_err . '</div>';
+            echo '<div class="alert alert-danger">' . htmlspecialchars($login_err) . '</div>';
         }        
         ?>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group">
-                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>" placeholder="Username" required>
+                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>" placeholder="Username" autocomplete="username" required>
                 <i class="fa-solid fa-user icon"></i>
-                <span class="error"><?php echo $username_err; ?></span>
+                <span class="error"><?php echo htmlspecialchars($username_err); ?></span>
             </div>    
             <div class="form-group">
-                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" placeholder="Password" required>
+                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" placeholder="Password" autocomplete="current-password" required>
                 <i class="fa-solid fa-lock icon"></i>
-                <span class="error"><?php echo $password_err; ?></span>
+                <span class="error"><?php echo htmlspecialchars($password_err); ?></span>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn">Login</button>
             </div>
         </form>
-        <p class="text-center mt-3"><a href="../index.php">← Back to Public Site</a></p>
-        <p class="text-center mt-1"><small>Need an admin account? <a href="signup.php">Register here</a></small></p>
+        <div class="auth-links">
+            <p><a href="../index.php">Back to Public Site</a></p>
+            <p><small>Need an admin account? <a href="signup.php">Register here</a></small></p>
+        </div>
     </div>    
 </body>
 </html>
