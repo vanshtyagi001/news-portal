@@ -23,7 +23,14 @@ echo "<script>document.title = '" . addslashes($page_title) . " - Express News';
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="mb-4 border-bottom pb-2">Search Results for: "<?php echo htmlspecialchars($query); ?>"</h1>
+        <div class="page-header mb-4">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <span class="section-accent-bar"></span>
+                    <h1 class="section-title">Search Results</h1>
+                </div>
+            </div>
+        </div>
 
         <?php
         $posts_to_display = [];
@@ -70,41 +77,51 @@ echo "<script>document.title = '" . addslashes($page_title) . " - Express News';
         }
         ?>
 
-        <p class="text-muted"><?php echo $total_results; ?> article(s) found.</p>
+        <p class="text-muted mb-4"><?php echo $total_results; ?> article(s) found for "<strong><?php echo htmlspecialchars($query); ?></strong>"</p>
 
-        <div class="row">
+        <div class="row g-4">
             <?php if (!empty($posts_to_display)): ?>
                 <?php foreach ($posts_to_display as $post): ?>
-                    <?php
-                        // Use our helper function to get the correct image paths
-                        $image_paths = getImagePaths($post['featured_image']);
-                    ?>
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100 shadow-sm news-card">
-                            <a href="/express-news/news/<?php echo $post['slug']; ?>">
+                    <?php $image_paths = getImagePaths($post['featured_image']); ?>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="news-card h-100">
+                            <a href="/express-news/news/<?php echo htmlspecialchars($post['slug']); ?>" class="news-card-img-link">
                                 <picture>
                                     <source srcset="<?php echo $image_paths['webp']; ?>" type="image/webp">
-                                    <source srcset="<?php echo $image_paths['jpg']; ?>" type="image/jpeg">
-                                    <img src="<?php echo $image_paths['jpg']; ?>" class="card-img-top" loading="lazy" alt="<?php echo htmlspecialchars($post['title']); ?>">
+                                    <source srcset="<?php echo $image_paths['jpg']; ?>"  type="image/jpeg">
+                                    <img src="<?php echo $image_paths['jpg']; ?>" class="news-card-img" loading="lazy" alt="<?php echo htmlspecialchars($post['title']); ?>">
                                 </picture>
                             </a>
-                            <div class="card-body d-flex flex-column">
-                                <?php if(!empty($post['category_names'])): ?>
-                                    <p class="card-text text-muted small mb-1"><?php echo htmlspecialchars($post['category_names']); ?></p>
+                            <div class="news-card-body">
+                                <?php if (!empty($post['category_names'])): ?>
+                                    <span class="news-card-category-label"><?php echo htmlspecialchars($post['category_names']); ?></span>
                                 <?php endif; ?>
-                                <h5 class="card-title"><a href="/express-news/news/<?php echo $post['slug']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h5>
-                                <p class="card-text flex-grow-1"><?php echo htmlspecialchars($post['summary']); ?></p>
-                                <a href="/express-news/news/<?php echo $post['slug']; ?>" class="btn btn-primary align-self-start mt-auto">Read More</a>
+                                <h5 class="news-card-title">
+                                    <a href="/express-news/news/<?php echo htmlspecialchars($post['slug']); ?>"><?php echo htmlspecialchars($post['title']); ?></a>
+                                </h5>
+                                <?php if (!empty($post['summary'])): ?>
+                                <p class="news-card-summary"><?php echo htmlspecialchars($post['summary']); ?></p>
+                                <?php endif; ?>
+                                <div class="news-card-meta">
+                                    <span class="news-card-date">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+                                        <?php echo date('M d, Y', strtotime($post['created_at'])); ?>
+                                    </span>
+                                    <a href="/express-news/news/<?php echo htmlspecialchars($post['slug']); ?>" class="news-card-read-more">
+                                        Read More
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php elseif(!empty($query)): ?>
                 <div class="col-12">
-                    <div class="alert alert-warning">Sorry, no articles matched your search query. Please try different keywords.</div>
+                    <div class="alert alert-warning">No articles matched your search. Please try different keywords.</div>
                 </div>
             <?php else: ?>
-                 <div class="col-12">
+                <div class="col-12">
                     <div class="alert alert-info">Please enter a search term to find articles.</div>
                 </div>
             <?php endif; ?>

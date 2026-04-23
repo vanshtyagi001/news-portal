@@ -10,28 +10,28 @@
 
 <div class="dashboard-stats mb-4">
     <div class="stat-card">
-        <div class="icon" style="background: var(--primary-color);"><i class="fa-solid fa-newspaper"></i></div>
+        <div class="icon" style="color: #2563eb; background: #eff6ff;"><i class="fa-solid fa-newspaper"></i></div>
         <div class="info">
             <h4>Total News Articles</h4>
             <?php $result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM posts"); echo "<p>" . mysqli_fetch_assoc($result)['total'] . "</p>"; ?>
         </div>
     </div>
     <div class="stat-card">
-        <div class="icon" style="background: #17a2b8;"><i class="fa-solid fa-tags"></i></div>
+        <div class="icon" style="color: #8b5cf6; background: #f5f3ff;"><i class="fa-solid fa-tags"></i></div>
         <div class="info">
             <h4>Total Categories</h4>
             <?php $result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM categories"); echo "<p>" . mysqli_fetch_assoc($result)['total'] . "</p>"; ?>
         </div>
     </div>
      <div class="stat-card">
-        <div class="icon" style="background: #28a745;"><i class="fa-solid fa-users-cog"></i></div>
+        <div class="icon" style="color: #10b981; background: #ecfdf5;"><i class="fa-solid fa-users-cog"></i></div>
         <div class="info">
             <h4>Admin Accounts</h4>
             <?php $result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM admins"); echo "<p>" . mysqli_fetch_assoc($result)['total'] . "</p>"; ?>
         </div>
     </div>
     <div class="stat-card">
-        <div class="icon" style="background: #ffc107;"><i class="fa-solid fa-comments"></i></div>
+        <div class="icon" style="color: #f59e0b; background: #fffbeb;"><i class="fa-solid fa-comments"></i></div>
         <div class="info">
             <h4>Pending Comments</h4>
             <?php $result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM comments WHERE is_approved = 0"); echo "<p>" . mysqli_fetch_assoc($result)['total'] . "</p>"; ?>

@@ -1,8 +1,9 @@
 <?php
 /**
- * Express News - Main Frontend Header (v13.5.1 - Tagline Fix)
+ * Express News - Main Frontend Header (v16 - Complete Theme System)
  * This file includes all core dependencies and renders the final, professional
  * single-bar navigation header, with a unified structure for all devices.
+ * Theme (color + font) is fully admin-controlled via the database.
  */
 
 // --- SMART INCLUDE ---
@@ -34,6 +35,8 @@ $site_name = $site_settings['site_name'] ?? 'Express News';
 $site_tagline = $site_settings['site_tagline'] ?? 'Your Daily News Source';
 $site_logo = $site_settings['site_logo'] ?? 'assets/images/logo.png';
 $site_favicon = $site_settings['site_favicon'] ?? 'assets/images/favicon.ico';
+$site_theme = $site_settings['site_theme'] ?? 'default';
+$site_font = $site_settings['site_font'] ?? 'default';
 
 // Construct the final page title using the dynamic site name
 $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' . htmlspecialchars($site_name) : htmlspecialchars($site_name) . ' - ' . htmlspecialchars($site_tagline);
@@ -72,13 +75,27 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
         <script type="application/ld+json"><?php echo json_encode($json_ld_data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?></script>
     <?php endif; ?>
     
+    <!-- Google Fonts (all font themes — loaded once, used by CSS variables) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@400;500;600;700;800&family=Nunito:wght@300;400;600;700;800&family=Open+Sans:wght@300;400;600;700&family=Orbitron:wght@400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700;800&family=Roboto+Slab:wght@300;400;500;600;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <!-- External Libraries & Custom Stylesheet -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="/express-news/assets/css/style.css">
 </head>
-<body>
+<?php
+    // Themes with dark backgrounds — add dark-mode class for legacy CSS compatibility
+    $dark_themes = ['dark', 'tech', 'gradient'];
+    $body_classes = [];
+    if (in_array($site_theme, $dark_themes)) {
+        $body_classes[] = 'dark-mode';
+    }
+    $body_class_str = !empty($body_classes) ? ' class="' . implode(' ', $body_classes) . '"' : '';
+?>
+<body data-theme="<?php echo htmlspecialchars($site_theme); ?>" data-font="<?php echo htmlspecialchars($site_font); ?>"<?php echo $body_class_str; ?> style="transition: background 0.35s ease, color 0.35s ease;">
     <header class="main-header" id="main-header">
         <nav class="navbar navbar-expand-lg ">
             <div class="container header-container">
@@ -132,12 +149,9 @@ $final_page_title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' .
                     </ul>
                 </div>
 
-                <!-- 3. Header Controls (Search, Profile, Theme, Hamburger) -->
+                <!-- 3. Header Controls (Search, Profile, Hamburger) -->
                 <div class="header-controls">
-                    <!-- Theme Toggle appears first on both -->
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="theme-toggle" title="Toggle Dark/Light Mode">
-                    </div>
+                    
                     <!-- Search and Profile are always visible -->
                     <button class="btn search-icon-btn" id="search-icon" type="button" title="Search"><i class="bi bi-search"></i></button>
                     <div class="profile-dropdown-container">

@@ -140,6 +140,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'show_like_count' => isset($_POST['show_like_count']) ? '1' : '0',
         'allow_comments'  => isset($_POST['allow_comments']) ? '1' : '0',
         'ticker_speed'    => isset($_POST['ticker_speed']) ? (int)$_POST['ticker_speed'] : 40,
+        'site_theme'      => $_POST['site_theme'] ?? 'default',
+        'site_font'       => $_POST['site_font'] ?? 'default',
     ];
 
     // Loop through and update all settings in the database
@@ -254,6 +256,32 @@ unset($_SESSION['settings_upload_errors']);
                 <small class="d-block text-muted">Higher number = Slower scroll. Recommended: 30-60 seconds.</small>
             </div>
             
+            <div class="form-group border-bottom py-3">
+                <label class="form-label"><strong>Theme &amp; Font Customization</strong></label>
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <div>
+                        <span class="text-muted me-2">Active Color Theme:</span>
+                        <strong><?php
+                            $theme_labels = ['default'=>'Default','toi'=>'TOI Theme','bbc'=>'BBC Theme','times_now'=>'Times Now','dark'=>'Dark Theme','minimal'=>'Minimal Light','tech'=>'Tech Theme','warm'=>'Warm Newspaper','gradient'=>'Gradient Modern'];
+                            echo htmlspecialchars($theme_labels[$settings['site_theme'] ?? 'default'] ?? 'Default');
+                        ?></strong>
+                    </div>
+                    <div>
+                        <span class="text-muted me-2">Active Font Theme:</span>
+                        <strong><?php
+                            $font_labels = ['default'=>'Default','classic'=>'Classic News','modern'=>'Modern News','tech_font'=>'Tech Style','minimal_font'=>'Minimal Clean','bold'=>'Bold Headlines','magazine'=>'Premium Magazine','elegant'=>'Elegant Serif','futuristic'=>'Futuristic','friendly'=>'Friendly UI','corporate'=>'Professional Corporate'];
+                            echo htmlspecialchars($font_labels[$settings['site_font'] ?? 'default'] ?? 'Default');
+                        ?></strong>
+                    </div>
+                    <a href="theme-settings.php" class="btn btn-primary btn-icon btn-sm">
+                        <i class="fa-solid fa-palette icon"></i> Open Theme Customization
+                    </a>
+                </div>
+                <small class="d-block text-muted mt-2">Use the Theme Customization panel to visually select color and font themes with live previews.</small>
+                <!-- Keep hidden inputs so the form doesn't overwrite theme settings on save -->
+                <input type="hidden" name="site_theme" value="<?php echo htmlspecialchars($settings['site_theme'] ?? 'default'); ?>">
+                <input type="hidden" name="site_font" value="<?php echo htmlspecialchars($settings['site_font'] ?? 'default'); ?>">
+            </div>
             <div class="form-group mt-4">
                 <button type="submit" class="btn btn-primary btn-icon"><i class="fa-solid fa-check icon"></i> Save All Settings</button>
             </div>

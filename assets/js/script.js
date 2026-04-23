@@ -1,185 +1,202 @@
 /**
- * Express News - Main Frontend JavaScript File (v11.1 - Robustness Fix)
+ * Express News — Main Frontend JavaScript
+ * Handles: sticky header, search, profile dropdown,
+ *          smooth scroll, card entrance animations,
+ *          like/bookmark AJAX, load-more AJAX.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        const currentTheme = localStorage.getItem('theme');
 
-        function applyTheme(theme) {
-            if (theme === 'dark-mode') {
-                document.body.classList.add('dark-mode');
-                themeToggle.checked = true;
-            } else {
-                document.body.classList.remove('dark-mode');
-                themeToggle.checked = false;
-            }
-        }
+    /* ─────────────────────────────────────────────
+       1. SMOOTH SCROLL — all anchor links on page
+    ───────────────────────────────────────────── */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (!target) return;
+            e.preventDefault();
+            const headerH = document.getElementById('main-header')?.offsetHeight || 70;
+            const top = target.getBoundingClientRect().top + window.pageYOffset - headerH - 16;
+            window.scrollTo({ top, behavior: 'smooth' });
+        });
+    });
 
-        // Apply theme on initial load.
-        // If a theme is saved in localStorage, use it. Otherwise, it will default to light.
-        if (currentTheme) {
-            applyTheme(currentTheme);
-        } else {
-            // No theme saved, ensure it's light mode.
-            applyTheme('light-mode');
-        }
 
-        // The event listener for changing the theme remains the same.
-        themeToggle.addEventListener('change', function () {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light-mode');
+    /* ─────────────────────────────────────────────
+       2. CARD ENTRANCE ANIMATIONS (Intersection Observer)
+       Cards fade + slide up as they enter the viewport.
+    ───────────────────────────────────────────── */
+    const observerOptions = {
+        threshold: 0.08,
+        rootMargin: '0px 0px -40px 0px'
+    };
+
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('card-visible');
+                cardObserver.unobserve(entry.target); // animate once
             }
         });
-    }
+    }, observerOptions);
+
+    // Observe every news card, hero card, and related article card
+    document.querySelectorAll(
+        '.news-card, .hero-main-card, .hero-side-card, .related-article-card, .trending-widget, .category-section'
+    ).forEach(el => {
+        el.classList.add('card-animate');
+        cardObserver.observe(el);
+    });
 
 
-    // --- Search Bar Toggle Logic ---
-    const searchIcon = document.getElementById('search-icon');
+    /* ─────────────────────────────────────────────
+       3. SEARCH BAR TOGGLE
+    ───────────────────────────────────────────── */
+    const searchIcon        = document.getElementById('search-icon');
     const searchBarContainer = document.getElementById('search-bar-container');
-    if (searchIcon && searchBarContainer) { // Check if elements exist
+    if (searchIcon && searchBarContainer) {
         searchIcon.addEventListener('click', function () {
             searchBarContainer.classList.toggle('active');
             if (searchBarContainer.classList.contains('active')) {
-                searchBarContainer.querySelector('input').focus();
+                searchBarContainer.querySelector('input')?.focus();
             }
+        });
+        // Close on Escape
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') searchBarContainer.classList.remove('active');
         });
     }
 
 
-    // --- Profile Dropdown Logic ---
-    const profileIcon = document.getElementById('profile-icon');
+    /* ─────────────────────────────────────────────
+       4. PROFILE DROPDOWN
+    ───────────────────────────────────────────── */
+    const profileIcon     = document.getElementById('profile-icon');
     const profileDropdown = document.getElementById('profile-dropdown');
-    if (profileIcon && profileDropdown) { // Check if elements exist
-        profileIcon.addEventListener('click', function (event) {
-            event.stopPropagation();
+    if (profileIcon && profileDropdown) {
+        profileIcon.addEventListener('click', function (e) {
+            e.stopPropagation();
             profileDropdown.classList.toggle('active');
         });
-
-        document.addEventListener('click', function (event) {
-            if (!profileDropdown.contains(event.target) && !profileIcon.contains(event.target)) {
+        document.addEventListener('click', function (e) {
+            if (!profileDropdown.contains(e.target) && !profileIcon.contains(e.target)) {
                 profileDropdown.classList.remove('active');
             }
         });
     }
 
 
-    // --- LIKE & BOOKMARK AJAX (More Robust) ---
-    function handleAction(buttonId, actionName) {
-        const actionButton = document.getElementById(buttonId);
-        // CRITICAL FIX: Only proceed if the button actually exists on the current page.
-        if (actionButton) {
-            actionButton.addEventListener('click', function () {
-                const postId = this.dataset.postId;
-                const formData = new FormData();
-                formData.append('action', actionName);
-                formData.append('post_id', postId);
-
-                fetch('/express-news/ajax-handler.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => {
-                        if (!response.ok) { throw new Error('Network response was not ok'); }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.status === 'error') {
-                            alert(data.message);
-                            return;
-                        }
-
-                        if (actionName === 'toggle_like') {
-                            const likeCountSpan = document.getElementById('like-count');
-                            const text = this.querySelector('span');
-                            if (data.status === 'liked') {
-                                this.classList.remove('btn-outline-danger');
-                                this.classList.add('btn-danger');
-                                text.textContent = 'Liked';
-                            } else {
-                                this.classList.remove('btn-danger');
-                                this.classList.add('btn-outline-danger');
-                                text.textContent = 'Like';
-                            }
-                            if (likeCountSpan) likeCountSpan.textContent = `${data.new_count} Likes`;
-                        }
-
-                        if (actionName === 'toggle_bookmark') {
-                            const text = this.querySelector('span');
-                            if (data.status === 'bookmarked') {
-                                this.classList.remove('btn-outline-primary');
-                                this.classList.add('btn-primary');
-                                text.textContent = 'Saved';
-                            } else {
-                                this.classList.remove('btn-primary');
-                                this.classList.add('btn-outline-primary');
-                                text.textContent = 'Save for Later';
-                            }
-                        }
-                    })
-                    .catch(error => console.error('Error handling action:', error));
-            });
-        }
+    /* ─────────────────────────────────────────────
+       5. STICKY HEADER
+    ───────────────────────────────────────────── */
+    const mainHeader = document.getElementById('main-header');
+    if (mainHeader) {
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const current = window.pageYOffset;
+            if (current > 10) {
+                mainHeader.classList.add('is-sticky');
+            } else {
+                mainHeader.classList.remove('is-sticky');
+            }
+            lastScroll = current;
+        }, { passive: true });
     }
 
-    handleAction('like-btn', 'toggle_like');
+
+    /* ─────────────────────────────────────────────
+       6. LIKE & BOOKMARK AJAX
+    ───────────────────────────────────────────── */
+    function handleAction(buttonId, actionName) {
+        const btn = document.getElementById(buttonId);
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            const postId = this.dataset.postId;
+            const fd = new FormData();
+            fd.append('action', actionName);
+            fd.append('post_id', postId);
+
+            fetch('/express-news/ajax-handler.php', { method: 'POST', body: fd })
+                .then(r => { if (!r.ok) throw new Error('Network error'); return r.json(); })
+                .then(data => {
+                    if (data.status === 'error') { alert(data.message); return; }
+
+                    if (actionName === 'toggle_like') {
+                        const countEl = document.getElementById('like-count');
+                        const txt     = this.querySelector('span');
+                        if (data.status === 'liked') {
+                            this.classList.replace('btn-outline-danger', 'btn-danger');
+                            if (txt) txt.textContent = 'Liked';
+                        } else {
+                            this.classList.replace('btn-danger', 'btn-outline-danger');
+                            if (txt) txt.textContent = 'Like';
+                        }
+                        if (countEl) countEl.textContent = `${data.new_count} Likes`;
+                    }
+
+                    if (actionName === 'toggle_bookmark') {
+                        const txt = this.querySelector('span');
+                        if (data.status === 'bookmarked') {
+                            this.classList.replace('btn-outline-primary', 'btn-primary');
+                            if (txt) txt.textContent = 'Saved';
+                        } else {
+                            this.classList.replace('btn-primary', 'btn-outline-primary');
+                            if (txt) txt.textContent = 'Save for Later';
+                        }
+                    }
+                })
+                .catch(err => console.error('Action error:', err));
+        });
+    }
+
+    handleAction('like-btn',     'toggle_like');
     handleAction('bookmark-btn', 'toggle_bookmark');
 
 
-    // --- AJAX Load More Logic ---
+    /* ─────────────────────────────────────────────
+       7. AJAX LOAD MORE
+    ───────────────────────────────────────────── */
     document.querySelectorAll('.load-more-btn').forEach(button => {
         button.addEventListener('click', function () {
             const categoryId = this.dataset.category;
-            let offset = parseInt(this.dataset.offset);
-            const container = document.getElementById('post-container-' + categoryId);
+            let   offset     = parseInt(this.dataset.offset);
+            const container  = document.getElementById('post-container-' + categoryId);
 
-            this.textContent = 'Loading...';
+            this.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="animation:spin .8s linear infinite"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> Loading…';
             this.disabled = true;
 
-            const formData = new FormData();
-            formData.append('category_id', categoryId);
-            formData.append('offset', offset);
+            const fd = new FormData();
+            fd.append('category_id', categoryId);
+            fd.append('offset', offset);
 
-            fetch('/express-news/ajax-load-more.php', { method: 'POST', body: formData })
-                .then(response => response.text())
-                .then(data => {
-                    if (data.trim() === 'no-more') {
-                        this.textContent = 'No More News';
+            fetch('/express-news/ajax-load-more.php', { method: 'POST', body: fd })
+                .then(r => r.text())
+                .then(html => {
+                    if (html.trim() === 'no-more') {
                         this.style.display = 'none';
-                    } else {
-                        container.insertAdjacentHTML('beforeend', data);
-                        offset += 4;
-                        this.dataset.offset = offset;
-                        this.textContent = 'Load More';
-                        this.disabled = false;
+                        return;
                     }
+                    // Insert new cards
+                    const temp = document.createElement('div');
+                    temp.innerHTML = html;
+                    const newCards = [...temp.children];
+                    newCards.forEach(card => {
+                        card.classList.add('card-animate');
+                        container.appendChild(card);
+                        // Trigger animation on next frame
+                        requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('card-visible')));
+                    });
+                    offset += 4;
+                    this.dataset.offset = offset;
+                    this.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> Load More';
+                    this.disabled = false;
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    this.textContent = 'Error! Try Again';
+                .catch(err => {
+                    console.error('Load more error:', err);
+                    this.innerHTML = 'Error — Try Again';
                     this.disabled = false;
                 });
         });
     });
-    // --- STICKY NAVIGATION BAR ---
-    // --- STICKY HEADER ---
-    const mainHeader = document.getElementById('main-header');
-    if (mainHeader) {
-        // We make it sticky almost immediately for a modern feel
-        const stickyPoint = 10;
 
-        window.onscroll = function () {
-            if (window.pageYOffset > stickyPoint) {
-                mainHeader.classList.add("is-sticky");
-            } else {
-                mainHeader.classList.remove("is-sticky");
-            }
-        };
-    }
-
-}); // End DOMContentLoaded
+}); // end DOMContentLoaded
