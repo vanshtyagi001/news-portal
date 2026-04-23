@@ -121,16 +121,20 @@ $user_has_liked = false;
 $user_has_bookmarked = false;
 if (isset($_SESSION['user_loggedin'])) {
     $user_id = $_SESSION['user_id'];
+
+    // Use get_result() for reliable row detection
     $like_check_stmt = mysqli_prepare($conn, "SELECT id FROM post_likes WHERE user_id = ? AND post_id = ?");
     mysqli_stmt_bind_param($like_check_stmt, "ii", $user_id, $post_id);
     mysqli_stmt_execute($like_check_stmt);
-    if(mysqli_stmt_fetch($like_check_stmt)) $user_has_liked = true;
+    $like_result = mysqli_stmt_get_result($like_check_stmt);
+    if ($like_result && mysqli_num_rows($like_result) > 0) $user_has_liked = true;
     mysqli_stmt_close($like_check_stmt);
-    
+
     $bookmark_check_stmt = mysqli_prepare($conn, "SELECT id FROM user_bookmarks WHERE user_id = ? AND post_id = ?");
     mysqli_stmt_bind_param($bookmark_check_stmt, "ii", $user_id, $post_id);
     mysqli_stmt_execute($bookmark_check_stmt);
-    if(mysqli_stmt_fetch($bookmark_check_stmt)) $user_has_bookmarked = true;
+    $bookmark_result = mysqli_stmt_get_result($bookmark_check_stmt);
+    if ($bookmark_result && mysqli_num_rows($bookmark_result) > 0) $user_has_bookmarked = true;
     mysqli_stmt_close($bookmark_check_stmt);
 }
 
@@ -552,6 +556,6 @@ $ticker_speed = $ticker_speed_result ? mysqli_fetch_assoc($ticker_speed_result)[
 </div>
 
 <?php 
+require_once 'includes/footer.php';
 mysqli_close($conn);
-require_once 'includes/footer.php'; 
 ?>

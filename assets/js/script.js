@@ -116,36 +116,52 @@ document.addEventListener('DOMContentLoaded', function () {
             fd.append('action', actionName);
             fd.append('post_id', postId);
 
+            // Disable during request to prevent double-clicks
+            btn.disabled = true;
+
             fetch('/express-news/ajax-handler.php', { method: 'POST', body: fd })
-                .then(r => { if (!r.ok) throw new Error('Network error'); return r.json(); })
+                .then(r => {
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                })
                 .then(data => {
+                    btn.disabled = false;
                     if (data.status === 'error') { alert(data.message); return; }
 
                     if (actionName === 'toggle_like') {
                         const countEl = document.getElementById('like-count');
-                        const txt     = this.querySelector('span');
+                        const txt     = btn.querySelector('span');
                         if (data.status === 'liked') {
-                            this.classList.replace('btn-outline-danger', 'btn-danger');
+                            btn.classList.remove('btn-outline-danger');
+                            btn.classList.add('btn-danger');
                             if (txt) txt.textContent = 'Liked';
                         } else {
-                            this.classList.replace('btn-danger', 'btn-outline-danger');
+                            btn.classList.remove('btn-danger');
+                            btn.classList.add('btn-outline-danger');
                             if (txt) txt.textContent = 'Like';
                         }
-                        if (countEl) countEl.textContent = `${data.new_count} Likes`;
+                        if (countEl && data.new_count !== undefined) {
+                            countEl.textContent = data.new_count + ' Likes';
+                        }
                     }
 
                     if (actionName === 'toggle_bookmark') {
-                        const txt = this.querySelector('span');
+                        const txt = btn.querySelector('span');
                         if (data.status === 'bookmarked') {
-                            this.classList.replace('btn-outline-primary', 'btn-primary');
+                            btn.classList.remove('btn-outline-primary');
+                            btn.classList.add('btn-primary');
                             if (txt) txt.textContent = 'Saved';
                         } else {
-                            this.classList.replace('btn-primary', 'btn-outline-primary');
+                            btn.classList.remove('btn-primary');
+                            btn.classList.add('btn-outline-primary');
                             if (txt) txt.textContent = 'Save for Later';
                         }
                     }
                 })
-                .catch(err => console.error('Action error:', err));
+                .catch(err => {
+                    btn.disabled = false;
+                    console.error('Action error:', err);
+                });
         });
     }
 

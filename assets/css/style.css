@@ -1933,37 +1933,75 @@ body[data-font="futuristic"] h3 {
 /* =====================================================
    NEWS CARDS — Redesigned
    ===================================================== */
+
+/* ── Card wrapper ──────────────────────────────────────────
+   overflow must be VISIBLE so translateY lift + box-shadow
+   are not clipped by the card's own bounding box.
+   The image is clipped separately via its own border-radius.
+   ─────────────────────────────────────────────────────── */
 .news-card {
     background-color: var(--theme-card-bg, #fff);
     border: 1px solid var(--theme-border, rgba(0,0,0,.1));
     border-radius: 10px;
-    overflow: hidden;
+    overflow: visible;                  /* MUST be visible for lift to work */
     display: flex;
     flex-direction: column;
-    /* Single, authoritative transition — no duplicates anywhere */
+    position: relative;
     transition:
-        transform    0.38s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow   0.38s cubic-bezier(0.22, 1, 0.36, 1),
-        border-color 0.28s ease;
+        transform    0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow   0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        border-color 0.3s ease;
     will-change: transform, box-shadow;
     height: 100%;
+    /* Clip background/border to rounded corners without clipping overflow */
+    border-radius: 10px;
 }
+
+/* Pseudo-element carries the background so border-radius clips it
+   while the element itself stays overflow:visible for the lift */
+.news-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background-color: var(--theme-card-bg, #fff);
+    border: 1px solid var(--theme-border, rgba(0,0,0,.1));
+    z-index: 0;
+    transition: border-color 0.3s ease;
+    pointer-events: none;
+}
+.news-card > * { position: relative; z-index: 1; }
+
 .news-card:hover {
-    transform:    translateY(-7px);
-    box-shadow:   0 20px 44px rgba(0, 0, 0, 0.13), 0 6px 14px rgba(0, 0, 0, 0.07);
+    transform:    translateY(-8px);
+    box-shadow:
+        0  2px  4px  rgba(0,0,0,0.04),
+        0  8px  16px rgba(0,0,0,0.08),
+        0 20px  40px rgba(0,0,0,0.10);
+}
+.news-card:hover::before {
     border-color: var(--theme-primary, #0d6efd);
 }
 
-/* Image wrapper */
+/* Image wrapper — clips image to top corners */
 .news-card-img-link {
     display: block;
     overflow: hidden;
     position: relative;
     background: #e9ecef;
     flex-shrink: 0;
+    border-radius: 10px 10px 0 0;
 }
 .news-card-img {
     width: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.news-card:hover .news-card-img {
+    transform: scale(1.06);
+}
+.news-card-img-link:hover .news-card-img { /* handled by .news-card:hover above */ }
     display: block;
     object-fit: cover;
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -2416,9 +2454,6 @@ html {
    ===================================================== */
 
 /* ── News cards hover — image zoom + title colour (no duplicate transition here) ── */
-.news-card:hover .news-card-img {
-    transform: scale(1.06);
-}
 .news-card:hover .news-card-title a {
     color: var(--theme-primary, #0d6efd) !important;
 }
