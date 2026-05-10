@@ -1916,10 +1916,12 @@ body[data-font="futuristic"] h3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
+    overflow: visible;
+    padding-bottom: 16px; /* space for bottom-row card shadows */
 }
 /* When there's a featured card, it spans 2 columns */
-.news-grid-featured { grid-column: span 2; }
-.news-grid-item     { grid-column: span 1; }
+.news-grid-featured { grid-column: span 2; overflow: visible; }
+.news-grid-item     { grid-column: span 1; overflow: visible; }
 
 @media (max-width: 991px) {
     .news-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1948,11 +1950,12 @@ body[data-font="futuristic"] h3 {
     flex-direction: column;
     position: relative;
     transition:
-        transform    0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow   0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        transform    0.42s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow   0.42s cubic-bezier(0.22, 1, 0.36, 1),
         border-color 0.3s ease;
     will-change: transform, box-shadow;
     height: 100%;
+    transform: translate3d(0, 0, 0);
     /* Clip background/border to rounded corners without clipping overflow */
     border-radius: 10px;
 }
@@ -1973,11 +1976,12 @@ body[data-font="futuristic"] h3 {
 .news-card > * { position: relative; z-index: 1; }
 
 .news-card:hover {
-    transform:    translateY(-8px);
+    transform:    translate3d(0, -4px, 0);
+    z-index: 2;
     box-shadow:
-        0  2px  4px  rgba(0,0,0,0.04),
-        0  8px  16px rgba(0,0,0,0.08),
-        0 20px  40px rgba(0,0,0,0.10);
+        0  2px  6px  rgba(0,0,0,0.04),
+        0  8px  16px rgba(0,0,0,0.07),
+        0 16px  28px rgba(0,0,0,0.08);
 }
 .news-card:hover::before {
     border-color: var(--theme-primary, #0d6efd);
@@ -2002,11 +2006,6 @@ body[data-font="futuristic"] h3 {
     transform: scale(1.06);
 }
 .news-card-img-link:hover .news-card-img { /* handled by .news-card:hover above */ }
-    display: block;
-    object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.news-card-img-link:hover .news-card-img { /* zoom handled by .news-card:hover below */ }
 
 /* Regular card image height */
 .news-grid-item .news-card-img,
@@ -2448,6 +2447,20 @@ html {
 .news-grid .news-grid-item:nth-child(3).card-animate { transition-delay: 0.14s; }
 .news-grid .news-grid-item:nth-child(4) .card-animate,
 .news-grid .news-grid-item:nth-child(4).card-animate { transition-delay: 0.21s; }
+
+/* Keep lift interaction strong and smooth even when card-animate sets transform.
+   This rule is intentionally placed after .card-animate.card-visible so hover wins. */
+@media (hover: hover) and (pointer: fine) {
+    .news-card:hover,
+    .news-card.card-animate.card-visible:hover {
+        transform: translate3d(0, -6px, 0);
+        z-index: 3;
+        box-shadow:
+            0  6px 14px rgba(0, 0, 0, 0.06),
+            0 14px 30px rgba(0, 0, 0, 0.08),
+            0 24px 46px rgba(0, 0, 0, 0.10);
+    }
+}
 
 /* =====================================================
    POLISHED CARD HOVER — unified, replaces old rules
